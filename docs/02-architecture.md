@@ -129,12 +129,12 @@ Two things this unlocks:
 |-----|-----------|-----|
 | Morning/EOD briefs, weekly synthesis | **Flagship** (Claude / DeepSeek-pro), via OpenRouter | Hard reasoning, worth the cost |
 | Per-episode podcast summaries | **Fast cheap** (DeepSeek-flash), via OpenRouter | High volume, doesn't need a flagship |
+| **Noise classification** (nightly lane audits) | **Fast cheap** (DeepSeek-flash), via OpenRouter | Thousands of tiny "signal or noise?" calls — cheap, and one fewer provider to manage |
 | Free tier (on my laptop) | **Local subscription CLI** | $0 incremental — tried *first* where available |
-| **Noise classification** (nightly lane audits) | **Gemini Flash-Lite** (direct) | Thousands of tiny "signal or noise?" calls — needs to be near-free |
 | **Context compression** | **Gemini Flash-Lite** (direct) | Squashing long histories cheaply |
 | **Embeddings** (podcast clustering) | **Gemini embeddings** (direct) | Cheap vector maths, not text generation |
 
-> **So yes — Gemini is in the fleet, but deliberately in the "cheap utility" lane:** the nightly noise-audit cron in all three lanes, conversation compression, and podcast-clustering embeddings. The *headline thinking* (what reaches my phone) is Claude/DeepSeek; Gemini does the high-volume, low-stakes plumbing where its Flash-Lite pricing wins.
+> **A note on consolidation:** these things *can* run on any cheap model, and I've moved them around. The nightly noise-audit cron originally used Gemini Flash-Lite; I later pointed it at DeepSeek-flash (via OpenRouter) to keep the whole text-generation side on **one provider and one key** — simpler to reason about and bill. Gemini still earns its place for **embeddings** (vector maths, not text — a different job) and conversation **compression**. The lesson isn't "Gemini vs DeepSeek"; it's that *because* model choice is just a config string ([OpenRouter](#one-gateway-many-models-openrouter)), consolidating or swapping the cheap-utility tier is a one-line change, not a rewrite.
 
 ---
 **Next:** [03 · A worked example: the podcast digest →](03-the-digest-pipeline.md)
