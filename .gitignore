@@ -1,0 +1,21 @@
+# Never commit secrets or personal data
+*.env
+.env*
+*token*
+*secret*
+*credential*
+*.key
+*.pem
+auth.json
+sessions/
+state.db
+*.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
