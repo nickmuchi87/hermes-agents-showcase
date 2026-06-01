@@ -104,5 +104,37 @@ flowchart LR
 
 This "try the cheap/free option first, fall back to the premium one only if needed" pattern is everywhere in the system. It's the difference between a fun side-project and a $300/month habit.
 
+### One gateway, many models: OpenRouter
+
+A practical problem: I want to use the *best model for each job* — Claude for some things, DeepSeek for others, Gemini for the cheap utility work — but I don't want five separate API accounts, five billing relationships, and five different bits of code.
+
+The fix is [**OpenRouter**](https://openrouter.ai): a single API that sits in front of dozens of providers. I send every request to one endpoint with a model name like `anthropic/claude-...` or `deepseek/deepseek-...`, and OpenRouter routes it, bills it centrally, and lets me **swap models by changing a string** — no code change.
+
+```mermaid
+flowchart LR
+    lanes[💼🎓👨‍👩‍👧 all lanes<br/>+ digest pipeline] --> or{🔀 OpenRouter<br/>one API, one bill}
+    or --> c[Claude<br/>headline reasoning]
+    or --> d[DeepSeek<br/>bulk + synthesis]
+    or --> q[Qwen / others<br/>swappable]
+    direct[Gemini direct<br/>cheap utility tier] -.also used.-> g[noise audit ·<br/>compression ·<br/>embeddings]
+```
+
+Two things this unlocks:
+- **Model choice is configuration, not code.** Each task has an env-overridable model name. When DeepSeek's flagship flaked one night and returned empty responses, switching that stage to its faster sibling was a one-line change — and I'd already wired it as an automatic fallback, so it self-healed.
+- **Per-task routing.** Heavy reasoning → a flagship; bulk per-item work → a fast cheap model; throwaway utility judgments → the cheapest thing available.
+
+### Who does what (the actual roster)
+
+| Job | Model tier | Why |
+|-----|-----------|-----|
+| Morning/EOD briefs, weekly synthesis | **Flagship** (Claude / DeepSeek-pro), via OpenRouter | Hard reasoning, worth the cost |
+| Per-episode podcast summaries | **Fast cheap** (DeepSeek-flash), via OpenRouter | High volume, doesn't need a flagship |
+| Free tier (on my laptop) | **Local subscription CLI** | $0 incremental — tried *first* where available |
+| **Noise classification** (nightly lane audits) | **Gemini Flash-Lite** (direct) | Thousands of tiny "signal or noise?" calls — needs to be near-free |
+| **Context compression** | **Gemini Flash-Lite** (direct) | Squashing long histories cheaply |
+| **Embeddings** (podcast clustering) | **Gemini embeddings** (direct) | Cheap vector maths, not text generation |
+
+> **So yes — Gemini is in the fleet, but deliberately in the "cheap utility" lane:** the nightly noise-audit cron in all three lanes, conversation compression, and podcast-clustering embeddings. The *headline thinking* (what reaches my phone) is Claude/DeepSeek; Gemini does the high-volume, low-stakes plumbing where its Flash-Lite pricing wins.
+
 ---
 **Next:** [03 · A worked example: the podcast digest →](03-the-digest-pipeline.md)

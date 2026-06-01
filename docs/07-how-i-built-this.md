@@ -15,7 +15,7 @@ It was useful enough that I built a second one for family. Then the pattern beca
 | **Agent runtime** | [Hermes Agent](https://hermes-agent.nousresearch.com) | Open-source, handles scheduling + tools + messaging so I didn't build that plumbing |
 | **Where it runs** | One $5/month cloud server | Always-on; my laptop sleeps |
 | **How it reaches me** | Telegram bots | Free, instant, works everywhere, easy to reply to |
-| **The "thinking"** | Claude, DeepSeek, Gemini (routed by cost) | No single model wins on price *and* quality |
+| **The "thinking"** | Claude, DeepSeek, Gemini — via [OpenRouter](https://openrouter.ai) | One API in front of all of them; route by cost/quality, swap models by changing a string ([details](02-architecture.md#one-gateway-many-models-openrouter)) |
 | **Memory** | A small local memory service | So agents remember across days + collaborate |
 | **Data** | Gmail, Google Calendar/Drive, RSS feeds, podcast feeds | Where my actual life already lives |
 
