@@ -55,6 +55,17 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 
 ![Three Telegram bots messaging only when it matters](images/telegram-bots.png)
 
+### See it in action
+
+> 📸 *Real (redacted) screenshots of the bots in daily use live in [`images/screenshots/`](images/screenshots/).*
+
+<!-- Once added, embed them here, e.g.:
+| Work bot — morning brief | MBA bot — pre-class | Family bot — relocation nudge |
+|---|---|---|
+| ![](images/screenshots/work-brief.png) | ![](images/screenshots/mba-preclass.png) | ![](images/screenshots/family-nudge.png) |
+-->
+
+
 ---
 
 ## What's in this repo
@@ -67,6 +78,7 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 | [`docs/04-memory.md`](docs/04-memory.md) | How the agents *remember* things across days |
 | [`docs/05-design-principles.md`](docs/05-design-principles.md) | The hard-won rules (cost control, "only ping me when it matters", failure handling) |
 | [`docs/06-the-schedule.md`](docs/06-the-schedule.md) | **Every scheduled job (all ~35), how they connect, and how Telegram delivery works** |
+| [`docs/07-how-i-built-this.md`](docs/07-how-i-built-this.md) | The honest build story — stack, what took the time, and advice if you want to try |
 | [`examples/`](examples/) | Sanitized excerpts of the real code |
 | [`images/`](images/) | Rendered workflow visuals |
 
