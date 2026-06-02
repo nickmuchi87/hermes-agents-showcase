@@ -81,15 +81,26 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 | [`docs/07-how-i-built-this.md`](docs/07-how-i-built-this.md) | The honest build story, stack, what took the time, and advice if you want to try |
 | [`docs/08-the-fleet-map.md`](docs/08-the-fleet-map.md) | **The fleet map: the whole system at a glance, then each lane up close, all ~35 jobs, every connection, and which ones ping Telegram** |
 | [`docs/09-the-ops-lane.md`](docs/09-the-ops-lane.md) | **The fleet that watches the fleet: a command-centre readiness board, an hourly self-healing watchdog, and an "on-call SRE" ops bot** |
+| [`docs/10-what-it-costs.md`](docs/10-what-it-costs.md) | The honest money page: why the fleet is cheap, and what my ~$300/mo total actually covers |
+| [`docs/11-when-it-goes-wrong.md`](docs/11-when-it-goes-wrong.md) | A gallery of real failures and how each was caught: the most honest page here |
+| [`docs/12-faq.md`](docs/12-faq.md) | The questions people actually ask (privacy, cost, "why not just ChatGPT", could I build one) |
+| [`docs/13-glossary.md`](docs/13-glossary.md) | Plain-English definitions of every term, no prior knowledge assumed |
 | [`examples/`](examples/) | Sanitized excerpts of the real code |
 | [`images/`](images/) | Rendered workflow visuals |
+
+### New here? A reading path
+
+- **Total beginner:** [01 What is an agent](docs/01-what-is-an-agent.md) → [03 A worked example](docs/03-the-digest-pipeline.md) → [04 Memory](docs/04-memory.md) → [12 FAQ](docs/12-faq.md). Keep [13 Glossary](docs/13-glossary.md) open in a tab.
+- **Want the architecture:** [02 Architecture](docs/02-architecture.md) → [08 The fleet map](docs/08-the-fleet-map.md) → [09 The ops lane](docs/09-the-ops-lane.md) → [05 Design principles](docs/05-design-principles.md).
+- **Thinking of building one:** [07 How I built this](docs/07-how-i-built-this.md) (incl. a step-by-step Hermes tutorial) → [05 Design principles](docs/05-design-principles.md) → [10 What it costs](docs/10-what-it-costs.md) → [`examples/`](examples/).
+- **Just want the honest reality:** [11 When it goes wrong](docs/11-when-it-goes-wrong.md) and [10 What it costs](docs/10-what-it-costs.md).
 
 ---
 
 ## The honest disclaimers
 
 - **This is a personal setup, not a product.** It's shared to *explain a way of working*, not as something to clone-and-run. Secrets, tokens, and personal data have been removed.
-- **It costs real (small) money.** The agents call commercial AI APIs. A core design goal was keeping that to a few dollars a month (see [design principles](docs/05-design-principles.md)).
+- **It costs real (small) money.** The agents call commercial AI APIs. The fleet itself stays cheap by design; the full, honest breakdown (and what my larger ~$300/mo AI habit actually covers) is in [what it costs](docs/10-what-it-costs.md).
 - **The AI is a junior assistant, not an oracle.** It triages and drafts; I decide. Every design choice assumes it will sometimes be wrong.
 
 ---
@@ -97,5 +108,7 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 ## The tech, named (for the curious)
 
 Built on [Hermes Agent](https://hermes-agent.nousresearch.com) (an open agent runtime), reachable over Telegram, with a local memory service, scheduled jobs ("crons"), and a mix of language models routed by cost/quality (Claude, DeepSeek, Gemini). Everything runs on one small cloud server. You do **not** need to know any of that to read the docs above, they start from zero.
+
+**Want a hands-on intro to Hermes itself?** This step-by-step video is a good place to start: [Hermes Agent Tutorial for Beginners, Step by Step](https://www.youtube.com/watch?v=LvWobwr0Neg).
 
 *Questions? This was built and documented collaboratively with Claude (Anthropic). The architecture is real and in daily use.*

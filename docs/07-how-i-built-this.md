@@ -44,5 +44,13 @@ That's the actual unlock for non-engineers: you don't have to know *how* to writ
 
 The leverage isn't in any single clever prompt. It's in a boring, reliable loop that runs every day whether you're paying attention or not, and earns enough trust that you *can* stop paying attention.
 
+## Want to actually try it?
+
+This fleet runs on **Hermes**, an open agent runtime. If you want a hands-on, from-zero walkthrough of setting one up, this is a good starting point:
+
+- 📺 **[Hermes Agent Tutorial for Beginners, Step by Step](https://www.youtube.com/watch?v=LvWobwr0Neg)**, a step-by-step video guide to getting a Hermes agent running. (It's the kind of guide that gets you from "what is this?" to a working agent.)
+
+Pair it with the [design principles](05-design-principles.md) here so you build in the cost control and "only ping me when it matters" discipline from day one, rather than learning them the expensive way.
+
 ---
 **Back to:** [README](../README.md) · [The schedule](06-the-schedule.md) · [Design principles](05-design-principles.md)
