@@ -20,133 +20,173 @@ If you only look at one diagram in this repo, make it this one. (The [schedule](
 
 ## The whole fleet, on one page
 
+Because the fleet is ~35 jobs, one all-in-one graph renders too small to read on GitHub. So here it is in **two zooms**: first the *shape* of the whole thing, then **each lane up close** with every job. Same colour key throughout — **green = pings my phone**, purple = AI/agent, grey = free plumbing, amber = shared memory, blue = Telegram bots.
+
+### Zoom 1 — the shape of the whole fleet
+
+```mermaid
+flowchart LR
+    SRC["📡 SOURCES<br/>Gmail×3 · Calendar · Drive ·<br/>Bloomberg / IMF / ratings ·<br/>X · podcasts · markets"]:::src
+    WORK["💼 WORK · 17 jobs<br/>markets · credit · IMF · ratings"]:::work
+    MBA["🎓 MBA · 9 jobs<br/>coursework · deadlines"]:::mba
+    FAM["👨‍👩‍👧 FAMILY · 9 jobs<br/>school · relocation"]:::fam
+    OPS["🛟 OPS · watchdog + /health<br/>watches the other three"]:::ping
+    MEM[("🧠 SHARED MEMORY")]:::mem
+    BW(["🤖 Work bot"]):::bot
+    BM(["🤖 MBA bot"]):::bot
+    BF(["🤖 Family bot"]):::bot
+    BO(["🤖 Ops bot"]):::bot
+    ME(["👤 my phone<br/>4 threads"]):::me
+
+    SRC --> WORK & MBA & FAM
+    WORK & MBA & FAM --> MEM
+    MEM -. "diffs · cross-lane links" .-> WORK & MBA
+    WORK --> BW
+    MBA --> BM
+    FAM --> BF
+    WORK & MBA & FAM -. "job status" .-> OPS
+    OPS -. "safe auto-fix" .-> WORK
+    OPS --> BO
+    BW & BM & BF & BO --> ME
+    ME -. "reply 'done: X'" .-> MEM
+
+    classDef src fill:#eceff1,stroke:#607d8b,color:#263238;
+    classDef work fill:#ede7f6,stroke:#5e35b1,color:#311b92,stroke-width:2px;
+    classDef mba fill:#e8eaf6,stroke:#3949ab,color:#1a237e,stroke-width:2px;
+    classDef fam fill:#fce4ec,stroke:#ad1457,color:#880e4f,stroke-width:2px;
+    classDef ping fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20,stroke-width:2px;
+    classDef mem fill:#fff8e1,stroke:#f9a825,color:#5f4300,stroke-width:2px;
+    classDef bot fill:#e3f2fd,stroke:#1565c0,color:#0d47a1;
+    classDef me fill:#fff,stroke:#000,color:#000,stroke-width:2px;
+```
+
+Four lanes write into one shared memory and speak through four separate bots; the ops lane sits above and watches the other three. Now the detail, one lane at a time.
+
+### Zoom 2a — 💼 WORK lane (17 jobs)
+
+The pattern to notice: five cheap **watchers** gather data first, then **one** AI brief reads all of it. Only four jobs ever ping me.
+
 ```mermaid
 flowchart TB
-    %% ---------- DATA SOURCES ----------
-    subgraph SRC["📡 DATA SOURCES"]
+    subgraph WS["⚙️ watchers — gather first (cheap / free)"]
         direction LR
-        gmail["📨 Gmail ×3"]
-        gcal["📅 Calendar"]
-        gdrive["📑 Drive"]
-        news["📰 News / RSS<br/>Bloomberg · IMF · ratings"]
-        xfeed["🐦 X / Twitter"]
-        pods["🎙️ 16 podcasts"]
-        mkts["📊 Prediction mkts"]
+        w_imf["10:10 Sun/Wed · imf-watcher<br/>IMF program news"]:::plumb
+        w_pol["10:30 · policy-commentary<br/>think-tank / policy RSS"]:::plumb
+        w_eml["🧠 10:45 · em_email_digest<br/>triage work inbox"]:::agent
+        w_rat["10:50 · rating-watcher<br/>rating-agency actions"]:::plumb
+        w_xam["10:55 · x-brief-am<br/>AM EM chatter (Grok)"]:::plumb
     end
+    brief["🧠📱 11:15 · em-morning-brief<br/>reads ALL watchers + memory → the brief"]:::ping
+    arch["⚙️ 11:30 · em_brief_archive<br/>save brief → memory"]:::plumb
+    pos["⚙️ 11:32 · em_position_log<br/>snapshot positions"]:::plumb
+    poly["⚙️ 11:00 / 21:00 · polymarket_snapshot<br/>prediction-market odds"]:::plumb
+    news2["⚙️📱 every 2h Mon–Fri · em_news_triage<br/>Bloomberg — ping if market-moving"]:::ping
+    intra["⚙️📱 16:00 / 20:00 · x-intraday-alerter<br/>intraday X — ping if notable"]:::ping
+    xpm["⚙️ 21:00 · x-brief-pm<br/>PM EM chatter"]:::plumb
+    aaa["⚙️ 22:00 · em_after_action_audit<br/>day's calls vs outcomes"]:::plumb
+    eod["🧠📱 00:45 · em_eod_nudge<br/>EOD wrap: what moved, what needs me"]:::ping
+    eoda["⚙️ 01:15 · em_eod_archive<br/>save EOD → memory"]:::plumb
+    aud["⚙️ 03:55 · em_lane_audit<br/>self-check: did it all run?"]:::plumb
+    drift["⚙️📱 04:30 · skills_drift_audit<br/>flag a stale skill"]:::ping
+    mem[("🧠 memory")]:::mem
+    bot(["🤖 Work bot"]):::bot
 
-    %% ---------- WORK LANE ----------
-    subgraph WORK["💼 WORK lane · em · 17 jobs"]
-        direction TB
-        w_imf["⚙️ 10:10 Sun/Wed · imf-watcher<br/>IMF program news → file"]:::plumb
-        w_pol["⚙️ 10:30 · policy-commentary<br/>think-tank / policy RSS → file"]:::plumb
-        w_eml["🧠 10:45 · em_email_digest<br/>triage work inbox → file"]:::agent
-        w_rat["⚙️ 10:50 · rating-watcher<br/>rating-agency actions → file"]:::plumb
-        w_xam["⚙️ 10:55 · x-brief-am<br/>morning EM chatter (Grok) → file"]:::plumb
-        w_brief["🧠📱 11:15 · em-morning-brief<br/>reads ALL above + memory,<br/>writes the brief"]:::ping
-        w_arch["⚙️ 11:30 · em_brief_archive<br/>save brief → memory"]:::plumb
-        w_pos["⚙️ 11:32 · em_position_log<br/>snapshot positions → memory"]:::plumb
-        w_poly["⚙️ 11:00/21:00 · polymarket_snapshot<br/>prediction-market odds → file"]:::plumb
-        w_news["⚙️📱 every 2h Mon–Fri · em_news_triage<br/>Bloomberg alerts — ping if market-moving"]:::ping
-        w_intra["⚙️📱 16:00/20:00 · x-intraday-alerter<br/>intraday X signal — ping if notable"]:::ping
-        w_xpm["⚙️ 21:00 · x-brief-pm<br/>evening EM chatter → file"]:::plumb
-        w_aaa["⚙️ 22:00 Mon–Fri · em_after_action_audit<br/>review day's calls vs outcomes"]:::plumb
-        w_eod["🧠📱 00:45 · em_eod_nudge<br/>end-of-day wrap: what moved,<br/>what needs me tomorrow"]:::ping
-        w_eoda["⚙️ 01:15 · em_eod_archive<br/>save EOD wrap → memory"]:::plumb
-        w_aud["⚙️ 03:55 · em_lane_audit<br/>self-check: did it all run?"]:::plumb
-        w_drift["⚙️📱 04:30 · skills_drift_audit<br/>flag a stale agent skill"]:::ping
-    end
-
-    %% ---------- MBA LANE ----------
-    subgraph MBA["🎓 MBA lane · wemba · 9 jobs"]
-        direction TB
-        m_drive["⚙️ every 30m · wemba_drive_watch<br/>watch Drive for new coursework"]:::plumb
-        m_pre["⚙️ every 30m · wemba_preclass_brief<br/>prep a brief if class is imminent"]:::plumb
-        m_brief["🧠 11:00 · daily_wemba_brief<br/>study brief: deadlines, materials, email"]:::agent
-        m_risk["🧠 12:00 · wemba_atrisk_radar<br/>flag deliverables at risk of slipping"]:::agent
-        m_sweep["⚙️ 13:00 · wemba_completion_sweep<br/>Drive vs deliverables — 'did you finish X?'"]:::plumb
-        m_eod["🧠 01:00 · wemba_eod_nudge<br/>end-of-day: tomorrow's prep"]:::agent
-        m_aud["⚙️ 03:55 · wemba_lane_audit<br/>self-check"]:::plumb
-        m_synth["⚙️ 22:00 Sun · wemba_weekly_synthesis<br/>week's coursework → memory"]:::plumb
-        m_bridge["⚙️📱 23:30 Sun · podcast_course_bridge<br/>link coursework ↔ podcast themes"]:::ping
-    end
-
-    %% ---------- FAMILY LANE ----------
-    subgraph FAM["👨‍👩‍👧 FAMILY lane · family · 9 jobs"]
-        direction TB
-        f_imm["⚙️📱 :00/:30 waking · family_imminent<br/>imminent calendar events — ping"]:::ping
-        f_reloc["⚙️📱 :15 waking · relocation_emails<br/>relocation email — ping"]:::ping
-        f_school["⚙️📱 hourly 11–23 · school_email_check<br/>school emails, tiered by sender"]:::ping
-        f_brief["🧠 11:00 · daily_family_brief<br/>morning brief: today's events + actions"]:::agent
-        f_arch["⚙️ 11:15 · family_brief_archive<br/>save brief → memory"]:::plumb
-        f_cd["⚙️ 12:00 · family_au_countdown<br/>countdown to move-day (T-30/14/7/3/1)"]:::plumb
-        f_sweep["⚙️📱 12:00 Sun · relocation_sweep<br/>weekly relocation-checklist sweep"]:::ping
-        f_rent["⚙️📱 every 48h · au_rental_search<br/>scan rentals in destination city"]:::ping
-        f_aud["⚙️ 03:55 · family_lane_audit<br/>self-check"]:::plumb
-    end
-
-    %% ---------- SHARED SERVICES ----------
-    digest["🎙️ Podcast digest<br/>(laptop 3×/wk · Sun fallback)<br/>16 feeds → tagged 2-min read"]:::agent
-    MEM[("🧠 SHARED MEMORY<br/>briefs · positions · course themes ·<br/>podcast insights · 'done' replies")]:::mem
-    OPS["🛟 OPS lane (4th, supervisory)<br/>self-heal watchdog hourly + /health<br/>auto-fixes safe failures · escalates rest"]:::ping
-
-    %% ---------- TELEGRAM ----------
-    subgraph TG["📱 TELEGRAM — four separate bots"]
-        direction LR
-        bw["🤖 Work bot"]:::bot
-        bm["🤖 MBA bot"]:::bot
-        bf["🤖 Family bot"]:::bot
-        bo["🤖 Ops bot"]:::bot
-    end
-    ME(["👤 One phone,<br/>three threads"]):::me
-
-    %% ---------- WIRING: sources into lanes ----------
-    news --> w_imf & w_pol & w_rat & w_news
-    gmail --> w_eml & f_reloc & f_school
-    xfeed --> w_xam & w_xpm & w_intra
-    mkts --> w_poly
-    gdrive --> m_drive
-    gcal --> f_imm
-    pods --> digest
-
-    %% ---------- WIRING: work lane internal ----------
-    w_imf & w_pol & w_eml & w_rat & w_xam --> w_brief
-    MEM -. "yesterday's diff" .-> w_brief
-    w_brief --> w_arch --> MEM
-    w_xpm --> w_eod
-    w_eod --> w_eoda --> MEM
-    w_pos --> MEM
-    digest --> MEM
-
-    %% ---------- WIRING: cross-lane bridge ----------
-    m_synth --> MEM
-    MEM -. "course themes + podcast insights" .-> m_bridge
-
-    %% ---------- WIRING: family internal ----------
-    f_brief --> f_arch --> MEM
-
-    %% ---------- WIRING: ops / self-heal supervises all lanes ----------
-    w_aud & m_aud & f_aud -. "job ledgers:<br/>status · errors" .-> OPS
-    OPS -. "safe auto-fix:<br/>repair token · retry job" .-> WORK
-    OPS --> bo
-
-    %% ---------- WIRING: to Telegram ----------
-    w_brief & w_news & w_intra & w_eod & w_drift --> bw
-    digest --> bw
-    m_bridge --> bm
-    f_imm & f_reloc & f_school & f_sweep & f_rent --> bf
-
-    bw & bm & bf & bo --> ME
-    ME -. "reply: 'done: X' / corrections" .-> MEM
+    WS --> brief
+    mem -. "yesterday's diff" .-> brief
+    poly -. "odds" .-> brief
+    brief --> bot
+    brief --> arch --> mem
+    pos --> mem
+    aaa --> mem
+    xpm --> eod
+    eod --> bot
+    eod --> eoda --> mem
+    news2 --> bot
+    intra --> bot
+    drift --> bot
+    aud -. "self-check" .-> mem
 
     classDef agent fill:#ede7f6,stroke:#5e35b1,color:#311b92;
     classDef plumb fill:#f5f5f5,stroke:#9e9e9e,color:#424242;
-    classDef ping  fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20,stroke-width:2px;
-    classDef mem   fill:#fff8e1,stroke:#f9a825,color:#5f4300,stroke-width:2px;
-    classDef bot   fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:2px;
-    classDef me    fill:#fce4ec,stroke:#ad1457,color:#880e4f;
+    classDef ping fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20,stroke-width:2px;
+    classDef mem fill:#fff8e1,stroke:#f9a825,color:#5f4300,stroke-width:2px;
+    classDef bot fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:2px;
 ```
 
-**Green nodes ping my phone.** Purple nodes think (AI). Grey nodes are free plumbing that just feeds the amber memory store. That's the whole fleet: ~35 jobs, and only a handful ever interrupt me.
+### Zoom 2b — 🎓 MBA lane (9 jobs)
+
+Mostly quiet plumbing into memory; it pings me **once a week** with its smartest output — the cross-lane link between a podcast and a course.
+
+```mermaid
+flowchart TB
+    drive["⚙️ every 30m · wemba_drive_watch<br/>watch Drive for new coursework"]:::plumb
+    pre["⚙️ every 30m · wemba_preclass_brief<br/>prep a brief if class is imminent"]:::plumb
+    brief["🧠 11:00 · daily_wemba_brief<br/>study brief: deadlines, materials, email"]:::agent
+    risk["🧠 12:00 · wemba_atrisk_radar<br/>flag deliverables at risk of slipping"]:::agent
+    sweep["⚙️ 13:00 · wemba_completion_sweep<br/>Drive vs deliverables — 'did you finish X?'"]:::plumb
+    eod["🧠 01:00 · wemba_eod_nudge<br/>end-of-day: tomorrow's prep"]:::agent
+    aud["⚙️ 03:55 · wemba_lane_audit<br/>self-check"]:::plumb
+    synth["⚙️ 22:00 Sun · wemba_weekly_synthesis<br/>week's coursework → memory"]:::plumb
+    bridge["⚙️📱 23:30 Sun · podcast_course_bridge<br/>links coursework ↔ podcast themes"]:::ping
+    work["💼 Work lane's podcast<br/>insights (tag: startup-ai)"]:::agent
+    mem[("🧠 shared memory")]:::mem
+    bot(["🤖 MBA bot"]):::bot
+
+    drive --> brief
+    pre --> brief
+    brief --> risk
+    brief --> sweep
+    eod -. "prep" .-> mem
+    synth --> mem
+    work --> mem
+    mem -. "course themes + podcast insights" .-> bridge
+    bridge --> bot
+
+    classDef agent fill:#ede7f6,stroke:#5e35b1,color:#311b92;
+    classDef plumb fill:#f5f5f5,stroke:#9e9e9e,color:#424242;
+    classDef ping fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20,stroke-width:2px;
+    classDef mem fill:#fff8e1,stroke:#f9a825,color:#5f4300,stroke-width:2px;
+    classDef bot fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:2px;
+```
+
+### Zoom 2c — 👨‍👩‍👧 FAMILY lane (9 jobs)
+
+The most time-sensitive lane (school + an international move), so it polls often during waking hours and the move-day countdown is allowed to get louder as we get closer.
+
+```mermaid
+flowchart TB
+    subgraph POLL["⚙️📱 frequent pollers (waking hours)"]
+        direction LR
+        imm["family_imminent · :00/:30<br/>imminent calendar events"]:::ping
+        reloc["relocation_emails · :15<br/>relocation email"]:::ping
+        school["school_email_check · hourly 11–23<br/>school emails, tiered by sender"]:::ping
+    end
+    brief["🧠 11:00 · daily_family_brief<br/>morning brief: today's events + actions"]:::agent
+    arch["⚙️ 11:15 · family_brief_archive<br/>save brief → memory"]:::plumb
+    cd["⚙️ 12:00 · family_au_countdown<br/>move-day countdown (T-30/14/7/3/1)"]:::plumb
+    sweep["⚙️📱 12:00 Sun · relocation_sweep<br/>weekly relocation checklist"]:::ping
+    rent["⚙️📱 every 48h · au_rental_search<br/>scan rentals in destination city"]:::ping
+    aud["⚙️ 03:55 · family_lane_audit<br/>self-check"]:::plumb
+    mem[("🧠 memory")]:::mem
+    bot(["🤖 Family bot"]):::bot
+
+    cd -. "urgency" .-> brief
+    brief --> arch --> mem
+    POLL --> bot
+    sweep --> bot
+    rent --> bot
+    aud -. "self-check" .-> mem
+
+    classDef agent fill:#ede7f6,stroke:#5e35b1,color:#311b92;
+    classDef plumb fill:#f5f5f5,stroke:#9e9e9e,color:#424242;
+    classDef ping fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20,stroke-width:2px;
+    classDef mem fill:#fff8e1,stroke:#f9a825,color:#5f4300,stroke-width:2px;
+    classDef bot fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:2px;
+```
+
+> The **ops lane** (the 4th, supervisory one) has its own close-up in [09 · The ops lane](09-the-ops-lane.md).
+
+**Green nodes ping my phone.** Purple nodes think (AI). Grey nodes are free plumbing into the amber memory store. That's the whole fleet: ~35 jobs, and only a handful ever interrupt me.
 
 ---
 
