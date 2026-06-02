@@ -48,12 +48,12 @@ The whole design assumes the AI will sometimes be wrong. So the interesting ques
 
 ## The pattern across all four
 
-None of these were caught by the AI being smarter. They were caught by **deterministic guardrails around** the AI:
+None of these were caught by the AI being smarter. They were caught by **deterministic guardrails around** the AI (the real code is in [`examples/`](../examples/)):
 
-- a linter that knows the real tools,
-- a quality counter, not just an uptime check,
-- a status ledger plus a plain-language reporter,
-- a watchdog with a short whitelist of safe repairs.
+- a linter that knows the real tools ([`skill_lint.py`](../examples/skill_lint.py)),
+- a quality counter, not just an uptime check ([`sitrep_readiness.py`](../examples/sitrep_readiness.py)),
+- a status ledger plus a plain-language reporter ([`fleet_health.py`](../examples/fleet_health.py)),
+- a watchdog with a short whitelist of safe repairs ([`self_heal_watchdog.py`](../examples/self_heal_watchdog.py)).
 
 That's the whole philosophy: treat the AI as a **capable but fallible junior**, and spend your engineering effort on the rails that catch it. ([Design principles](05-design-principles.md).)
 

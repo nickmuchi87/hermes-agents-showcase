@@ -13,6 +13,20 @@ genericised. They are here to make the [docs](../docs/) concrete, not to run as-
 | [`agent_to_memory.py`](agent_to_memory.py) | How an agent writes a structured memory other agents can read (memory doc) |
 | [`SOUL.example.md`](SOUL.example.md) | A lane's "job description" / constitution (architecture doc) |
 
+### The ops / fleet-health tooling
+
+The actual scripts behind [docs/09 (the ops lane)](../docs/09-the-ops-lane.md) and [docs/11 (when it goes wrong)](../docs/11-when-it-goes-wrong.md), lightly sanitized (real hosts, IPs, emails, and paths replaced with placeholders; logic unchanged):
+
+| File | What it is |
+|------|------------|
+| [`fleet_health.py`](fleet_health.py) | The deterministic, no-LLM status check behind the ops bot's `/health` command |
+| [`self_heal_watchdog.py`](self_heal_watchdog.py) | Hourly self-healing: a safe/reversible remediation whitelist that escalates everything else |
+| [`sitrep_readiness.py`](sitrep_readiness.py) | The "command centre" scoring core: feed-freshness SLAs, output-quality scoring, and the readiness roll-up |
+| [`skill_drift_audit.sh`](skill_drift_audit.sh) | Nightly captured-skill drift detector (real dir vs curated symlink) |
+| [`skill_lint.py`](skill_lint.py) | The deterministic gate that rejects skills referencing fictional tools |
+| [`skillify.sh`](skillify.sh) | Triages a drift: lint, then print the promote-or-delete commands for a human |
+
 > Every file here is illustrative. The production versions have more error
 > handling, logging, and edge-case logic; the noise has been stripped so the
-> *idea* is visible.
+> *idea* is visible. The Python ones run as-is; `sitrep_readiness.py` even
+> ships a sample probe so you can run it and see the scoring.

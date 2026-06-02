@@ -159,7 +159,16 @@ flowchart TB
 
 The three lanes look after my work, school, and family. The ops lane looks after **them**: quietly fixing what it safely can, and tapping me on the shoulder, in plain language, for the rest.
 
+## See the real code
+
+The actual (lightly sanitized) scripts behind this chapter are in [`examples/`](../examples/):
+
+- [`fleet_health.py`](../examples/fleet_health.py) , the no-LLM `/health` check
+- [`self_heal_watchdog.py`](../examples/self_heal_watchdog.py) , the hourly safe-remediation watchdog
+- [`sitrep_readiness.py`](../examples/sitrep_readiness.py) , the command-centre scoring core (runs as-is)
+- [`skill_drift_audit.sh`](../examples/skill_drift_audit.sh) + [`skill_lint.py`](../examples/skill_lint.py) + [`skillify.sh`](../examples/skillify.sh) , the skill-curation trio
+
 ---
-**Next:** [01 · What is an agent? →](01-what-is-an-agent.md) (back to the start)
+**Next:** [10 · What it costs →](10-what-it-costs.md)
 
 **Back to:** [README](../README.md) · [Fleet map](08-the-fleet-map.md) · [Schedule](06-the-schedule.md) · [Design principles](05-design-principles.md)
