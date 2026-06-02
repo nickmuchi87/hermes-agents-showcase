@@ -46,7 +46,7 @@ flowchart TB
     tg --> me([👤 Me])
 ```
 
-> **A quiet fourth lane.** Above these three content lanes sits a supervisory **ops lane** — it produces no work of its own; it watches the other three, auto-fixes safe failures, and pings a separate ops bot when it needs me. It's covered in its own chapter: [09 · The ops lane](09-the-ops-lane.md).
+> **A quiet fourth lane.** Above these three content lanes sits a supervisory **ops lane**: it produces no work of its own; it watches the other three, auto-fixes safe failures, and pings a separate ops bot when it needs me. It's covered in its own chapter: [09 · The ops lane](09-the-ops-lane.md).
 
 ## What each lane is made of
 
@@ -66,10 +66,10 @@ flowchart LR
     botcfg --> out
 ```
 
-- **SOUL.md** — a plain-text "constitution" telling the AI who it is and how to behave (tone, hard rules, what never to do). This is where the three lanes diverge most.
-- **jobs.json** — the cron schedule: which task fires when.
-- **helper scripts** — small deterministic programs (no AI) that gather or post data, so the AI only does the *judgment*, not the plumbing.
-- **bot + model config** — which Telegram bot it speaks through, and which AI models it's allowed to use.
+- **SOUL.md**: a plain-text "constitution" telling the AI who it is and how to behave (tone, hard rules, what never to do). This is where the three lanes diverge most.
+- **jobs.json**: the cron schedule: which task fires when.
+- **helper scripts**: small deterministic programs (no AI) that gather or post data, so the AI only does the *judgment*, not the plumbing.
+- **bot + model config**: which Telegram bot it speaks through, and which AI models it's allowed to use.
 
 ## Two kinds of scheduled job
 
@@ -89,7 +89,7 @@ flowchart TB
     noagent -->|costs nothing| free[🆓]
 ```
 
-If a task can be done by deterministic code, it runs as a **no-agent** job — zero AI cost. The LLM is reserved for the genuinely hard part: *reading messy input and deciding what matters.* (This wasn't the original design — see the [cautionary tale in design principles](05-design-principles.md) about a job that was needlessly burning the AI ~48 times a day.)
+If a task can be done by deterministic code, it runs as a **no-agent** job, zero AI cost. The LLM is reserved for the genuinely hard part: *reading messy input and deciding what matters.* (This wasn't the original design, see the [cautionary tale in design principles](05-design-principles.md) about a job that was needlessly burning the AI ~48 times a day.)
 
 ## The model router
 
@@ -108,9 +108,9 @@ This "try the cheap/free option first, fall back to the premium one only if need
 
 ### One gateway, many models: OpenRouter
 
-A practical problem: I want to use the *best model for each job* — Claude for some things, DeepSeek for others, Gemini for the cheap utility work — but I don't want five separate API accounts, five billing relationships, and five different bits of code.
+A practical problem: I want to use the *best model for each job*, Claude for some things, DeepSeek for others, Gemini for the cheap utility work, but I don't want five separate API accounts, five billing relationships, and five different bits of code.
 
-The fix is [**OpenRouter**](https://openrouter.ai): a single API that sits in front of dozens of providers. I send every request to one endpoint with a model name like `anthropic/claude-...` or `deepseek/deepseek-...`, and OpenRouter routes it, bills it centrally, and lets me **swap models by changing a string** — no code change.
+The fix is [**OpenRouter**](https://openrouter.ai): a single API that sits in front of dozens of providers. I send every request to one endpoint with a model name like `anthropic/claude-...` or `deepseek/deepseek-...`, and OpenRouter routes it, bills it centrally, and lets me **swap models by changing a string**: no code change.
 
 ```mermaid
 flowchart LR
@@ -122,7 +122,7 @@ flowchart LR
 ```
 
 Two things this unlocks:
-- **Model choice is configuration, not code.** Each task has an env-overridable model name. When DeepSeek's flagship flaked one night and returned empty responses, switching that stage to its faster sibling was a one-line change — and I'd already wired it as an automatic fallback, so it self-healed.
+- **Model choice is configuration, not code.** Each task has an env-overridable model name. When DeepSeek's flagship flaked one night and returned empty responses, switching that stage to its faster sibling was a one-line change, and I'd already wired it as an automatic fallback, so it self-healed.
 - **Per-task routing.** Heavy reasoning → a flagship; bulk per-item work → a fast cheap model; throwaway utility judgments → the cheapest thing available.
 
 ### Who does what (the actual roster)
@@ -132,18 +132,18 @@ Two things this unlocks:
 | Morning/EOD briefs, weekly synthesis | **Flagship** (Claude / DeepSeek-pro), via OpenRouter | Hard reasoning, worth the cost |
 | **Live X/Twitter market scan** (AM + PM briefs) | **Grok** w/ native `x_search` tool | Real-time read of what credible EM analysts/journalists are posting *right now* |
 | Per-episode podcast summaries | **Fast cheap** (DeepSeek-flash), via OpenRouter | High volume, doesn't need a flagship |
-| **Noise classification** (nightly lane audits) | **Fast cheap** (DeepSeek-flash), via OpenRouter | Thousands of tiny "signal or noise?" calls — cheap, and one fewer provider to manage |
-| Free tier (on my laptop) | **Local subscription CLI** | $0 incremental — tried *first* where available |
+| **Noise classification** (nightly lane audits) | **Fast cheap** (DeepSeek-flash), via OpenRouter | Thousands of tiny "signal or noise?" calls, cheap, and one fewer provider to manage |
+| Free tier (on my laptop) | **Local subscription CLI** | $0 incremental, tried *first* where available |
 | **Context compression** | **Gemini Flash-Lite** (direct) | Squashing long histories cheaply |
 | **Embeddings** (podcast clustering) | **Gemini embeddings** (direct) | Cheap vector maths, not text generation |
 
-> **A note on consolidation:** these things *can* run on any cheap model, and I've moved them around. The nightly noise-audit cron originally used Gemini Flash-Lite; I later pointed it at DeepSeek-flash (via OpenRouter) to keep the whole text-generation side on **one provider and one key** — simpler to reason about and bill. Gemini still earns its place for **embeddings** (vector maths, not text — a different job) and conversation **compression**. The lesson isn't "Gemini vs DeepSeek"; it's that *because* model choice is just a config string ([OpenRouter](#one-gateway-many-models-openrouter)), consolidating or swapping the cheap-utility tier is a one-line change, not a rewrite.
+> **A note on consolidation:** these things *can* run on any cheap model, and I've moved them around. The nightly noise-audit cron originally used Gemini Flash-Lite; I later pointed it at DeepSeek-flash (via OpenRouter) to keep the whole text-generation side on **one provider and one key**: simpler to reason about and bill. Gemini still earns its place for **embeddings** (vector maths, not text, a different job) and conversation **compression**. The lesson isn't "Gemini vs DeepSeek"; it's that *because* model choice is just a config string ([OpenRouter](#one-gateway-many-models-openrouter)), consolidating or swapping the cheap-utility tier is a one-line change, not a rewrite.
 
 ### Why a different model for X/Twitter
 
-The work bot's morning and evening market briefs lead with **what credible people are saying on X right now** — rating-agency actions, IMF news, analyst takes on specific emerging-market credits. No general model can do that: it needs *live* access to X.
+The work bot's morning and evening market briefs lead with **what credible people are saying on X right now**: rating-agency actions, IMF news, analyst takes on specific emerging-market credits. No general model can do that: it needs *live* access to X.
 
-The answer is **Grok** (xAI's model), which has a native `x_search` tool — it can actually query X and read recent posts. So this one job routes to Grok instead of the usual models. Two design touches make it useful rather than noisy:
+The answer is **Grok** (xAI's model), which has a native `x_search` tool, it can actually query X and read recent posts. So this one job routes to Grok instead of the usual models. Two design touches make it useful rather than noisy:
 
 ```mermaid
 flowchart LR
@@ -156,10 +156,10 @@ flowchart LR
     a & b & c --> brief[📱 EM X brief →<br/>feeds the morning + EOD wraps]
 ```
 
-1. **A curated prior** — a list of ~110 reputable accounts (EM economists, sovereign-debt journalists, the IMF/World Bank/central banks). Grok is told to prioritise and cite these, and to flag anything from an unknown account as `[unverified]`.
-2. **Tiered surfacing** — posts are ranked by source credibility, so a Brad Setser thread leads and an anonymous hot-take is labelled and demoted, never silently dropped.
+1. **A curated prior**: a list of ~110 reputable accounts (EM economists, sovereign-debt journalists, the IMF/World Bank/central banks). Grok is told to prioritise and cite these, and to flag anything from an unknown account as `[unverified]`.
+2. **Tiered surfacing**: posts are ranked by source credibility, so a Brad Setser thread leads and an anonymous hot-take is labelled and demoted, never silently dropped.
 
-The result is saved to a rolling snapshot file that the end-of-day wrap reads — so the market brief and the EOD summary stay consistent. *(Hard-won detail: the evening window is thinner than the morning, so the PM brief needs explicit instructions to surface the best of what it finds rather than declaring the session "quiet" — otherwise a strict model reports nothing even when there are usable posts.)*
+The result is saved to a rolling snapshot file that the end-of-day wrap reads, so the market brief and the EOD summary stay consistent. *(Hard-won detail: the evening window is thinner than the morning, so the PM brief needs explicit instructions to surface the best of what it finds rather than declaring the session "quiet", otherwise a strict model reports nothing even when there are usable posts.)*
 
 ---
 **Next:** [03 · A worked example: the podcast digest →](03-the-digest-pipeline.md)

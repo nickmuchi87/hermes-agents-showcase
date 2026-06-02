@@ -2,7 +2,7 @@
 
 This is my favourite agent because it's the easiest to *feel* the value of. I follow ~16 podcasts across emerging-markets macro, AI-in-finance, and startups. That's **20+ hours of audio a week** I have no chance of listening to.
 
-The digest agent turns that into a 2-minute read — and, once a week, a cross-episode "what are the smart people converging on?" synthesis.
+The digest agent turns that into a 2-minute read, and, once a week, a cross-episode "what are the smart people converging on?" synthesis.
 
 ![From 20 hours of podcasts to a 2-minute read](../images/digest-pipeline.png)
 
@@ -26,18 +26,18 @@ flowchart TB
 
 ## What stage 4 actually produces (per episode)
 
-Each episode becomes a structured note — not a wall of text, but fields I can scan:
+Each episode becomes a structured note, not a wall of text, but fields I can scan:
 
 - **Summary** (≤200 words, leading with the most relevant angle)
-- **Takeaways** (3–5 bullets)
+- **Takeaways** (3-5 bullets)
 - **Countries mentioned** (so I can search "what did the corpus say about Egypt?")
 - **Listen verdict**: LISTEN / SKIM / SKIP, with a one-line reason
 - **Pillar**: is this an EM, AI-in-finance, or startup episode?
-- For startup/AI episodes — **does it connect to one of my MBA courses?** (this is the bridge to the school agent)
+- For startup/AI episodes, **does it connect to one of my MBA courses?** (this is the bridge to the school agent)
 
 ## Stage 10: the part that's genuinely hard for a human
 
-Listening to one podcast is easy. Noticing that **three different experts on three different shows independently made the same call** — *that's* the alpha, and it's exactly what a human drowning in content misses.
+Listening to one podcast is easy. Noticing that **three different experts on three different shows independently made the same call**: *that's* the alpha, and it's exactly what a human drowning in content misses.
 
 ```mermaid
 flowchart LR
@@ -48,7 +48,7 @@ flowchart LR
     synth --> contra[🔴 Contradicts my book<br/>views that challenge<br/>my actual positions]
 ```
 
-That last output — *"here are the podcast views that directly contradict the positions you hold"* — is deliberately uncomfortable, and the most useful thing the whole system does.
+That last output, *"here are the podcast views that directly contradict the positions you hold"*, is deliberately uncomfortable, and the most useful thing the whole system does.
 
 ## The cost trick on this pipeline
 
@@ -70,11 +70,11 @@ Because every episode is summarised and stored in [memory](04-memory.md), I can 
 ```
 /podcast_q oil Iran Hormuz
 → [EXPERT] Javier Blas: current oil rally is a Middle-East risk
-  premium, not a supply shock — fades absent real disruption...
+  premium, not a supply shock, fades absent real disruption...
   on: Odd Lots (2026-05-18)
 ```
 
-No AI call, no waiting — it's a plain keyword search over the stored corpus. Fast and free.
+No AI call, no waiting, it's a plain keyword search over the stored corpus. Fast and free.
 
 ---
 **Next:** [04 · How the agents remember →](04-memory.md)

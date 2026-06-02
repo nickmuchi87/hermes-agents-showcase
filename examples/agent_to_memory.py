@@ -3,7 +3,7 @@ How an agent writes a structured memory that OTHER agents can later read.
 
 This is the glue behind cross-agent collaboration (see docs/04-memory.md): the
 work agent's podcast digest writes tagged memories; the MBA agent reads them
-later to connect coursework to podcast themes. The two never talk directly —
+later to connect coursework to podcast themes. The two never talk directly ,
 they collaborate through shared, tagged memory.
 
 Sanitized excerpt.
@@ -27,7 +27,7 @@ def _post(path: str, payload: dict, timeout=15):
 
 def remember(title: str, content: str, concepts: list[str], mem_type="note"):
     """Save one memory. A stable session id (derived from the title) means
-    re-running supersedes the previous version instead of piling up duplicates —
+    re-running supersedes the previous version instead of piling up duplicates ,
     so 'this week's expert views' updates in place each week."""
     sid = "podcast_" + hashlib.sha1(title.encode()).hexdigest()[:12]
 
@@ -49,7 +49,7 @@ def remember(title: str, content: str, concepts: list[str], mem_type="note"):
 if __name__ == "__main__":
     remember(
         title="Podcast AI/Startup Insights (rolling 4w)",
-        content="## Costco unit economics — durable-moat flywheel pricing ...",
+        content="## Costco unit economics, durable-moat flywheel pricing ...",
         concepts=["podcast", "startup-ai", "MGMT 8010"],
         mem_type="podcast",
     )

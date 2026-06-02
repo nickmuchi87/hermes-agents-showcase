@@ -1,6 +1,6 @@
 # Sanitized code examples
 
-These are **redacted excerpts** of the real, in-use code — trimmed to illustrate
+These are **redacted excerpts** of the real, in-use code, trimmed to illustrate
 a pattern, with all tokens, keys, file paths, and personal data removed or
 genericised. They are here to make the [docs](../docs/) concrete, not to run as-is.
 

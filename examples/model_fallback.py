@@ -5,7 +5,7 @@ Pattern (design principles #2 and #3): try the free/cheap option first, fall
 through to a premium model only if needed, and never let one provider's flake
 kill the whole job.
 
-Sanitized excerpt — real version has retries, cost logging, and prompt caching.
+Sanitized excerpt, real version has retries, cost logging, and prompt caching.
 """
 import os
 import requests
@@ -54,7 +54,7 @@ def synthesize(prompt: str):
         text = fn(prompt)
         if text:
             return {"text": text, "model_used": label}
-    return None  # every tier failed — caller degrades gracefully
+    return None  # every tier failed, caller degrades gracefully
 
 
 def run_local_cli(prompt: str):

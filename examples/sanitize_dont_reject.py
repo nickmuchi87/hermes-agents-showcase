@@ -1,8 +1,8 @@
 """
 Sanitize, don't reject.
 
-The weekly synthesis asks the AI for structured data — expert views, themes,
-contradicting views — each requiring a citation. One run returned 30 perfect
+The weekly synthesis asks the AI for structured data, expert views, themes,
+contradicting views, each requiring a citation. One run returned 30 perfect
 items and 1 missing its citation; the validator rejected the ENTIRE synthesis
 over that single item, losing a whole week's analysis.
 

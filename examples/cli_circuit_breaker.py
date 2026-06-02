@@ -29,7 +29,7 @@ def run_local_cli(prompt: str, timeout_s: int = 600):
     if os.environ.get("USE_LOCAL_CLI") != "1":
         return None
 
-    # Breaker already tripped this run — don't even try.
+    # Breaker already tripped this run, don't even try.
     if _CLI_BROKEN:
         return None
 

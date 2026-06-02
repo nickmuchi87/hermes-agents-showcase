@@ -1,20 +1,20 @@
 # 6 · The schedule: every job, and how they connect
 
-This is the part people find most surprising: there's no "AI deciding what to do next." The fleet runs on a **boring, deterministic schedule** — about **35 jobs a day** across the three lanes. Each job has a fixed time, a fixed task, and a fixed delivery target. The intelligence is *inside* each job; the orchestration is just a clock.
+This is the part people find most surprising: there's no "AI deciding what to do next." The fleet runs on a **boring, deterministic schedule**: about **35 jobs a day** across the three lanes. Each job has a fixed time, a fixed task, and a fixed delivery target. The intelligence is *inside* each job; the orchestration is just a clock.
 
 Two kinds of job (recap from [architecture](02-architecture.md)):
-- 🧠 **agent** job — invokes the AI to read + judge + write.
-- ⚙️ **no-agent** job — pure script, no AI, zero cost. Most jobs are these.
+- 🧠 **agent** job, invokes the AI to read + judge + write.
+- ⚙️ **no-agent** job, pure script, no AI, zero cost. Most jobs are these.
 
 And three **delivery targets**:
-- 📱 `telegram` — sends me a message on that lane's bot.
-- 🔄 `origin`/`local` — produces data/files other jobs consume; I'm not pinged.
+- 📱 `telegram`, sends me a message on that lane's bot.
+- 🔄 `origin`/`local`, produces data/files other jobs consume; I'm not pinged.
 
-> All times below are **UTC**. My morning is ~11:00 UTC (≈ 6–7am US Eastern).
+> All times below are **UTC**. My morning is ~11:00 UTC (≈ 6-7am US Eastern).
 
 ---
 
-## 💼 WORK lane (`em`) — 17 jobs
+## 💼 WORK lane (`em`), 17 jobs
 
 The busiest lane. Notice the **pattern**: cheap no-agent "watcher" scripts run *first* and write data locally; then the AI morning brief runs and reads everything they gathered.
 
@@ -29,10 +29,10 @@ The busiest lane. Notice the **pattern**: cheap no-agent "watcher" scripts run *
 | 11:30 | `em_brief_archive` | ⚙️ | local | Saves the brief to memory (for tomorrow's diff) |
 | 11:32 | `em_position_log` | ⚙️ | local | Snapshots my positions → memory |
 | 11:00, 21:00 | `polymarket_snapshot` | ⚙️ | local | Prediction-market odds → file |
-| 11–23 (every 2h, Mon–Fri) | `em_news_triage` | ⚙️ | 📱 | Bloomberg alerts → only pings if market-moving |
-| 16:00, 20:00 (Mon–Fri) | `x-intraday-alerter` | ⚙️ | 📱 | Intraday X signal → pings if notable |
+| 11-23 (every 2h, Mon-Fri) | `em_news_triage` | ⚙️ | 📱 | Bloomberg alerts → only pings if market-moving |
+| 16:00, 20:00 (Mon-Fri) | `x-intraday-alerter` | ⚙️ | 📱 | Intraday X signal → pings if notable |
 | 21:00 | `x-brief-pm` | ⚙️ | local | Evening EM chatter → file |
-| 22:00 (Mon–Fri) | `em_after_action_audit` | ⚙️ | local | Reviews the day's calls vs. outcomes |
+| 22:00 (Mon-Fri) | `em_after_action_audit` | ⚙️ | local | Reviews the day's calls vs. outcomes |
 | 00:45 | `em_eod_nudge` | 🧠 | 📱 | End-of-day wrap: what moved, what needs me tomorrow |
 | 01:15 | `em_eod_archive` | ⚙️ | local | Saves the EOD wrap to memory |
 | 03:55 | `em_lane_audit` | ⚙️ | local | Self-check: did everything run? |
@@ -51,7 +51,7 @@ flowchart LR
 
 ---
 
-## 🎓 MBA lane (`wemba`) — 9 jobs
+## 🎓 MBA lane (`wemba`), 9 jobs
 
 | Time (UTC) | Job | Type | Delivers | What it does |
 |-----------|-----|------|----------|--------------|
@@ -65,7 +65,7 @@ flowchart LR
 | **22:00 (Sun)** | **`wemba_weekly_synthesis`** | ⚙️ | origin | Synthesises the week's coursework → memory |
 | **23:30 (Sun)** | **`podcast_course_bridge`** | ⚙️ | 📱 | **Links the week's coursework to recent podcast themes** |
 
-**The cross-lane connection (the elegant bit):** the Sunday `weekly_synthesis` (22:00) writes the week's course themes to memory. Ninety minutes later, `podcast_course_bridge` (23:30) reads *both* those course themes **and** the work lane's podcast insights, finds overlaps (e.g. a startup podcast that maps to my entrepreneurship paper), and messages me. **Two lanes collaborating through shared memory** — see [memory](04-memory.md).
+**The cross-lane connection (the elegant bit):** the Sunday `weekly_synthesis` (22:00) writes the week's course themes to memory. Ninety minutes later, `podcast_course_bridge` (23:30) reads *both* those course themes **and** the work lane's podcast insights, finds overlaps (e.g. a startup podcast that maps to my entrepreneurship paper), and messages me. **Two lanes collaborating through shared memory**: see [memory](04-memory.md).
 
 ```mermaid
 flowchart LR
@@ -76,7 +76,7 @@ flowchart LR
 
 ---
 
-## 👨‍👩‍👧 FAMILY lane (`family`) — 9 jobs
+## 👨‍👩‍👧 FAMILY lane (`family`), 9 jobs
 
 The most time-sensitive lane (school deadlines, an international move), so it polls more frequently during waking hours.
 
@@ -84,7 +84,7 @@ The most time-sensitive lane (school deadlines, an international move), so it po
 |-----------|-----|------|----------|--------------|
 | :00,:30 (waking hrs) | `family_imminent` | ⚙️ | 📱 | Imminent family-calendar events → pings |
 | :15 (waking hrs) | `relocation_emails` | ⚙️ | 📱 | Relocation-related email → pings |
-| hourly (11–23) | `school_email_check` | ⚙️ | 📱 | School emails, tiered by sender importance |
+| hourly (11-23) | `school_email_check` | ⚙️ | 📱 | School emails, tiered by sender importance |
 | 11:00 | `daily_family_brief` | 🧠 | origin | Morning family brief: today's events + actions |
 | 11:15 | `family_brief_archive` | ⚙️ | local | Saves the brief to memory |
 | 12:00 | `family_au_countdown` | ⚙️ | origin | Counts down to move-day (escalates at T-30/14/7/3/1) |
@@ -98,7 +98,7 @@ The most time-sensitive lane (school deadlines, an international move), so it po
 
 ## How it all delivers: three Telegram bots
 
-Every "📱" above lands in Telegram — but through **three separate bots**, one per lane, so my phone shows three distinct conversations (see the screenshot in the [README](../README.md)).
+Every "📱" above lands in Telegram, but through **three separate bots**, one per lane, so my phone shows three distinct conversations (see the screenshot in the [README](../README.md)).
 
 ```mermaid
 flowchart TB
@@ -115,8 +115,8 @@ flowchart TB
 ```
 
 Two things make this pleasant rather than spammy:
-1. **Separate threads** keep work/school/family mentally separate — I can mute one without losing the others.
-2. **It's a two-way channel.** I reply `done: <thing>` and the relevant agent marks it complete in memory; I correct it and that's remembered. The bots aren't just broadcasting — they're a conversation. And I can *ask* on demand: `/podcast_q oil Iran` queries the corpus instantly, no scheduled job needed.
+1. **Separate threads** keep work/school/family mentally separate, I can mute one without losing the others.
+2. **It's a two-way channel.** I reply `done: <thing>` and the relevant agent marks it complete in memory; I correct it and that's remembered. The bots aren't just broadcasting, they're a conversation. And I can *ask* on demand: `/podcast_q oil Iran` queries the corpus instantly, no scheduled job needed.
 
 ---
 
@@ -126,8 +126,8 @@ Two things make this pleasant rather than spammy:
 flowchart LR
     dawn["🌅 ~11:00 UTC<br/>(my morning)"] --> briefs[Work + MBA + Family<br/>morning briefs fire<br/>after their watchers]
     briefs --> day["☀️ daytime<br/>frequent pollers:<br/>news, school, intraday,<br/>drive watcher"]
-    day --> eve["🌆 21:00–01:00<br/>EOD wraps<br/>(work, MBA)"]
-    eve --> night["🌙 03:00–04:30<br/>lane audits +<br/>drift checks (self-care)"]
+    day --> eve["🌆 21:00-01:00<br/>EOD wraps<br/>(work, MBA)"]
+    eve --> night["🌙 03:00-04:30<br/>lane audits +<br/>drift checks (self-care)"]
     night --> sun["📅 Sunday extras<br/>weekly synthesis +<br/>podcast↔course bridge"]
     sun --> dawn
 ```
@@ -136,7 +136,7 @@ Roughly: **morning = brief me**, **daytime = catch anything urgent**, **evening 
 
 ---
 
-> 🗺️ **Want it all in one picture?** See [08 · The fleet map](08-the-fleet-map.md) — every job above, every connection, and which ones ping Telegram, on a single page.
+> 🗺️ **Want it all in one picture?** See [08 · The fleet map](08-the-fleet-map.md), every job above, every connection, and which ones ping Telegram, on a single page.
 
 ---
 **Next:** [07 · How I built this →](07-how-i-built-this.md)
