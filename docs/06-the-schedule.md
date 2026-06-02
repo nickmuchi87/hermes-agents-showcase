@@ -135,6 +135,10 @@ flowchart LR
 Roughly: **morning = brief me**, **daytime = catch anything urgent**, **evening = wrap up**, **night = the fleet checks its own health**, **Sunday = the deeper weekly thinking**. Same loop every day, ~35 jobs, one small server, a few dollars a month.
 
 ---
+
+> 🗺️ **Want it all in one picture?** See [08 · The fleet map](08-the-fleet-map.md) — every job above, every connection, and which ones ping Telegram, on a single page.
+
+---
 **Next:** [07 · How I built this →](07-how-i-built-this.md)
 
-**Back to:** [README](../README.md) · [Architecture](02-architecture.md) · [Memory](04-memory.md) · [Design principles](05-design-principles.md)
+**Back to:** [README](../README.md) · [Architecture](02-architecture.md) · [Memory](04-memory.md) · [Design principles](05-design-principles.md) · [Fleet map](08-the-fleet-map.md)
