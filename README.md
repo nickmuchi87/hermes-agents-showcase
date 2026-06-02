@@ -85,6 +85,7 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 | [`docs/11-when-it-goes-wrong.md`](docs/11-when-it-goes-wrong.md) | A gallery of real failures and how each was caught: the most honest page here |
 | [`docs/12-faq.md`](docs/12-faq.md) | The questions people actually ask (privacy, cost, "why not just ChatGPT", could I build one) |
 | [`docs/13-glossary.md`](docs/13-glossary.md) | Plain-English definitions of every term, no prior knowledge assumed |
+| [`docs/14-the-ai-pm.md`](docs/14-the-ai-pm.md) | **The AI portfolio manager: an agent that makes a real (paper) decision daily, gather → deliberate → commit → memo, under guardrails** |
 | [`examples/`](examples/) | Sanitized excerpts of the real code |
 | [`images/`](images/) | Rendered workflow visuals |
 

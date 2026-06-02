@@ -26,6 +26,12 @@ The actual scripts behind [docs/09 (the ops lane)](../docs/09-the-ops-lane.md) a
 | [`skill_lint.py`](skill_lint.py) | The deterministic gate that rejects skills referencing fictional tools |
 | [`skillify.sh`](skillify.sh) | Triages a drift: lint, then print the promote-or-delete commands for a human |
 
+### The AI PM
+
+| File | What it is |
+|------|------------|
+| [`pm_decision_loop.py`](pm_decision_loop.py) | Sketch of the AI portfolio manager's daily decision: cheap signal-gather → budget-capped deliberation → commit weights → memo ([docs/14](../docs/14-the-ai-pm.md)). Runs as-is with stubbed model calls. |
+
 > Every file here is illustrative. The production versions have more error
 > handling, logging, and edge-case logic; the noise has been stripped so the
 > *idea* is visible. The Python ones run as-is; `sitrep_readiness.py` even
