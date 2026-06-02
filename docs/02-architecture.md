@@ -46,6 +46,8 @@ flowchart TB
     tg --> me([👤 Me])
 ```
 
+> **A quiet fourth lane.** Above these three content lanes sits a supervisory **ops lane** — it produces no work of its own; it watches the other three, auto-fixes safe failures, and pings a separate ops bot when it needs me. It's covered in its own chapter: [09 · The ops lane](09-the-ops-lane.md).
+
 ## What each lane is made of
 
 Every lane is the same machinery with different settings:

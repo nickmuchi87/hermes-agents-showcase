@@ -80,6 +80,7 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 | [`docs/06-the-schedule.md`](docs/06-the-schedule.md) | **Every scheduled job (all ~35), how they connect, and how Telegram delivery works** |
 | [`docs/07-how-i-built-this.md`](docs/07-how-i-built-this.md) | The honest build story — stack, what took the time, and advice if you want to try |
 | [`docs/08-the-fleet-map.md`](docs/08-the-fleet-map.md) | **One master diagram: all ~35 jobs, every connection, and exactly which ones ping Telegram** |
+| [`docs/09-the-ops-lane.md`](docs/09-the-ops-lane.md) | **The fleet that watches the fleet: a command-centre readiness board, an hourly self-healing watchdog, and an "on-call SRE" ops bot** |
 | [`examples/`](examples/) | Sanitized excerpts of the real code |
 | [`images/`](images/) | Rendered workflow visuals |
 

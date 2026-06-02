@@ -87,13 +87,15 @@ flowchart TB
     %% ---------- SHARED SERVICES ----------
     digest["🎙️ Podcast digest<br/>(laptop 3×/wk · Sun fallback)<br/>16 feeds → tagged 2-min read"]:::agent
     MEM[("🧠 SHARED MEMORY<br/>briefs · positions · course themes ·<br/>podcast insights · 'done' replies")]:::mem
+    OPS["🛟 OPS lane (4th, supervisory)<br/>self-heal watchdog hourly + /health<br/>auto-fixes safe failures · escalates rest"]:::ping
 
     %% ---------- TELEGRAM ----------
-    subgraph TG["📱 TELEGRAM — three separate bots"]
+    subgraph TG["📱 TELEGRAM — four separate bots"]
         direction LR
         bw["🤖 Work bot"]:::bot
         bm["🤖 MBA bot"]:::bot
         bf["🤖 Family bot"]:::bot
+        bo["🤖 Ops bot"]:::bot
     end
     ME(["👤 One phone,<br/>three threads"]):::me
 
@@ -122,13 +124,18 @@ flowchart TB
     %% ---------- WIRING: family internal ----------
     f_brief --> f_arch --> MEM
 
+    %% ---------- WIRING: ops / self-heal supervises all lanes ----------
+    w_aud & m_aud & f_aud -. "job ledgers:<br/>status · errors" .-> OPS
+    OPS -. "safe auto-fix:<br/>repair token · retry job" .-> WORK
+    OPS --> bo
+
     %% ---------- WIRING: to Telegram ----------
     w_brief & w_news & w_intra & w_eod & w_drift --> bw
     digest --> bw
     m_bridge --> bm
     f_imm & f_reloc & f_school & f_sweep & f_rent --> bf
 
-    bw & bm & bf --> ME
+    bw & bm & bf & bo --> ME
     ME -. "reply: 'done: X' / corrections" .-> MEM
 
     classDef agent fill:#ede7f6,stroke:#5e35b1,color:#311b92;
@@ -168,17 +175,22 @@ flowchart LR
         c4["relocation_sweep · Sun 12:00<br/>weekly checklist"]
         c5["au_rental_search · every 48h<br/>new rentals found"]
     end
+    subgraph ops["🛟 OPS bot"]
+        d1["self-heal watchdog · hourly<br/>only if it escalated something"]
+        d2["/health · on demand<br/>I ask, it answers"]
+    end
 
     work --> phone(["📱 my phone"])
     mba --> phone
     fam --> phone
+    ops --> phone
     phone -. "I reply 'done: X' — it sticks" .-> brain[("🧠 memory")]
 
     classDef g fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20;
-    class work,mba,fam g;
+    class work,mba,fam,ops g;
 ```
 
-Notice the asymmetry: the **family** bot is the chattiest (school + an international move are time-sensitive), the **work** bot fires on a predictable rhythm with two "only-if-it-matters" interrupters, and the **MBA** bot deliberately pings *once a week* with its smartest output — the cross-lane link between a podcast and a course. Everything else those lanes do is quiet plumbing into memory.
+Notice the asymmetry: the **family** bot is the chattiest (school + an international move are time-sensitive), the **work** bot fires on a predictable rhythm with two "only-if-it-matters" interrupters, the **MBA** bot deliberately pings *once a week* with its smartest output — the cross-lane link between a podcast and a course — and the **ops** bot stays silent unless the fleet itself needs help (or I ask it `/health`). Everything else those lanes do is quiet plumbing into memory. (The ops lane gets its own chapter: [09 · The ops lane →](09-the-ops-lane.md).)
 
 And it's **two-way**: every bot is a conversation, not a broadcast. I reply `done: <thing>` and the agent marks it complete in memory; I can ask `/podcast_q oil Iran` and it searches the corpus on demand. (More in [memory](04-memory.md).)
 
