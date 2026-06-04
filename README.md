@@ -86,6 +86,7 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 | [`docs/12-faq.md`](docs/12-faq.md) | The questions people actually ask (privacy, cost, "why not just ChatGPT", could I build one) |
 | [`docs/13-glossary.md`](docs/13-glossary.md) | Plain-English definitions of every term, no prior knowledge assumed |
 | [`docs/14-the-ai-pm.md`](docs/14-the-ai-pm.md) | **The AI portfolio manager: an agent that makes a real (paper) decision daily, gather → deliberate → commit → memo, under guardrails** |
+| [`docs/15-cross-episode-synthesis.md`](docs/15-cross-episode-synthesis.md) | **From episodes to insight: how per-episode summaries become a cross-episode synthesis (themes, expert voices, challenges to my positions) that also feeds coursework and notes** |
 | [`examples/`](examples/) | Sanitized excerpts of the real code |
 | [`images/`](images/) | Rendered workflow visuals |
 
