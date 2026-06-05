@@ -57,10 +57,14 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 
 ### See it in action
 
-> 📸 *Real (redacted) screenshots of the bots in daily use live in [`images/screenshots/`](images/screenshots/).*
+> 📸 *Real screenshots of the bots in daily use live in [`images/screenshots/`](images/screenshots/).*
 
-<!-- Once added, embed them here, e.g.:
-| Work bot, morning brief | MBA bot, pre-class | Family bot, relocation nudge |
+**MBA bot — daily WEMBA brief:** deadlines, what's new in Drive, and what's worth noting, pushed each morning.
+
+![WEMBA daily brief: pending deadlines, new Drive files, and worth-noting items](images/screenshots/mba-preclass.png)
+
+<!-- Work-bot + family-bot shots to add next: images/screenshots/work-brief.png, images/screenshots/family-nudge.png
+| Work bot, morning brief | MBA bot, brief | Family bot, relocation nudge |
 |---|---|---|
 | ![](images/screenshots/work-brief.png) | ![](images/screenshots/mba-preclass.png) | ![](images/screenshots/family-nudge.png) |
 -->
