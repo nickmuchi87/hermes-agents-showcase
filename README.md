@@ -91,6 +91,10 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 | [`docs/13-glossary.md`](docs/13-glossary.md) | Plain-English definitions of every term, no prior knowledge assumed |
 | [`docs/14-the-ai-pm.md`](docs/14-the-ai-pm.md) | **The AI portfolio manager: an agent that makes a real (paper) decision daily, gather → deliberate → commit → memo, under guardrails** |
 | [`docs/15-cross-episode-synthesis.md`](docs/15-cross-episode-synthesis.md) | **From episodes to insight: how per-episode summaries become a cross-episode synthesis (themes, expert voices, challenges to my positions) that also feeds coursework and notes** |
+| [`docs/16-the-chief-of-staff.md`](docs/16-the-chief-of-staff.md) | **The chief-of-staff: the layer that tracks follow-through, not just deadlines, and checks for *evidence* a task got done** |
+| [`docs/17-the-fleet-that-fixes-itself.md`](docs/17-the-fleet-that-fixes-itself.md) | **The fleet that fixes itself (carefully): a self-healing watchdog and a shadow-mode remediation agent that proposes safe fixes and escalates the rest** |
+| [`docs/18-many-minds-one-call.md`](docs/18-many-minds-one-call.md) | **Many minds, one call: a mixture-of-agents experiment where several models vote on one AI-PM decision, with automatic fallback to the trusted single model** |
+| [`docs/19-the-family-lane-learns-to-see.md`](docs/19-the-family-lane-learns-to-see.md) | **The family lane learns to see: a vision model that judges house-listing *photos* to filter and rank our relocation rental search** |
 | [`examples/`](examples/) | Sanitized excerpts of the real code |
 | [`images/`](images/) | Rendered workflow visuals |
 
@@ -100,6 +104,7 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 - **Want the architecture:** [02 Architecture](docs/02-architecture.md) → [08 The fleet map](docs/08-the-fleet-map.md) → [09 The ops lane](docs/09-the-ops-lane.md) → [05 Design principles](docs/05-design-principles.md).
 - **Thinking of building one:** [07 How I built this](docs/07-how-i-built-this.md) (incl. a step-by-step Hermes tutorial) → [05 Design principles](docs/05-design-principles.md) → [10 What it costs](docs/10-what-it-costs.md) → [`examples/`](examples/).
 - **Just want the honest reality:** [11 When it goes wrong](docs/11-when-it-goes-wrong.md) and [10 What it costs](docs/10-what-it-costs.md).
+- **Recently added:** [16 The chief-of-staff](docs/16-the-chief-of-staff.md) (tracking follow-through) → [17 The fleet that fixes itself](docs/17-the-fleet-that-fixes-itself.md) (self-healing) → [18 Many minds, one call](docs/18-many-minds-one-call.md) (mixture-of-agents) → [19 The family lane learns to see](docs/19-the-family-lane-learns-to-see.md) (vision).
 
 ---
 
