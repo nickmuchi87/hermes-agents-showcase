@@ -1,6 +1,6 @@
 # 9 · The ops lane: the fleet that watches the fleet
 
-Thirty-five jobs run every day on a small server I don't look at. Things *will* break, a feed goes stale, a login token gets corrupted, a model returns an empty response at 1am. The dangerous failure isn't the one that pages me; it's the one that **fails silently** and I find out three days later that my morning brief has been blank.
+Sixty-plus jobs run every day on a small server I don't look at. Things *will* break, a feed goes stale, a login token gets corrupted, a model returns an empty response at 1am. The dangerous failure isn't the one that pages me; it's the one that **fails silently** and I find out three days later that my morning brief has been blank.
 
 So the fleet has a **fourth lane** whose only job is to watch the other three. It has three parts, escalating in autonomy:
 
@@ -29,7 +29,7 @@ flowchart TB
         c4["⏰ CRON JOBS: every job's last status,<br/>last error, last run time"]
         c5["🗞️ DATA FEEDS: age of each feed vs a<br/>freshness deadline (SLA)"]
         c6["🔑 API KEYS: is each key present?"]
-        c7["🔍 X-FEED QUALITY: how many recent runs<br/>came back 'nothing found'?"]
+        c7["🔍 FEED QUALITY: how many recent runs<br/>came back 'nothing found'?"]
     end
     checks --> verdict{readiness}
     verdict -->|all green| ok["🟢 fleet healthy"]
@@ -41,8 +41,8 @@ flowchart TB
 
 Two of those checks are subtler than "is it on?" and worth calling out, because they catch the failures that *don't* announce themselves:
 
-- **Feed freshness (SLAs).** Each data feed has a deadline, the X market-chatter feed should be under ~16h old (it runs morning + evening); the IMF feed under 48h. A feed that's simply *old* is flagged 🔴 even though nothing "errored." A stale feed is a job that quietly stopped producing.
-- **X-feed quality, not just liveness.** The live-market scan can run "successfully" and still return *"no material chatter"* every time, technically working, actually useless. So the SITREP counts how many of the last 10 runs came back empty: 3/10 is a yellow flag, 6/10 is red. **A job can be green on "did it run?" and red on "did it produce anything worth having?"**, and only the second one matters.
+- **Feed freshness (SLAs).** Each data feed has a deadline, the financial-press scan should be under ~16h old (it runs morning + evening); the IMF feed under 48h. A feed that's simply *old* is flagged 🔴 even though nothing "errored." A stale feed is a job that quietly stopped producing.
+- **Feed quality, not just liveness.** A content scan can run "successfully" and still return *"nothing material"* every time, technically working, actually useless. So the SITREP counts how many of the last 10 runs came back empty: 3/10 is a yellow flag, 6/10 is red. **A job can be green on "did it run?" and red on "did it produce anything worth having?"**, and only the second one matters.
 
 The output is a board of 🟢 / 🟡 / 🔴, with everything broken collected into a "RED list" at the top. One glance answers *"what needs me?"*
 
@@ -103,7 +103,7 @@ flowchart LR
     class h,w,b,r bot;
 ```
 
-`/health` is the one I use most: it reads every lane's job ledger and prints a one-screen verdict, *"🟢 All 35 jobs green. work gateway up 6h. Last auto-fix: repaired login token 22:00."* When something's red, I can ask **"why did `em_eod_nudge` fail?"** and it reads the actual error and the recent log and explains it like a colleague would, *"context overflow, 9.5k tokens; a fallback model hit a smaller window, want me to trim the prompt? (needs your ok, it's a config change)."*
+`/health` is the one I use most: it reads every lane's job ledger and prints a one-screen verdict, *"🟢 All 62 jobs green. work gateway up 6h. Last auto-fix: repaired login token 22:00."* When something's red, I can ask **"why did `em_eod_nudge` fail?"** and it reads the actual error and the recent log and explains it like a colleague would, *"context overflow, 9.5k tokens; a fallback model hit a smaller window, want me to trim the prompt? (needs your ok, it's a config change)."*
 
 ### The boundary that makes it trustworthy
 

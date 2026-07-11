@@ -7,8 +7,8 @@ Plain-English definitions for the terms used across this repo. No prior knowledg
 | **Agent** | A long-running program that wakes on a schedule, gathers information, runs it through an AI with a specific job and memory, and messages me only when something matters. Not a chatbot you open; it comes to you. ([more](01-what-is-an-agent.md)) |
 | **Lane** | One agent dedicated to one part of my life (work, MBA, family) plus a supervisory **ops** lane. Same machinery, different job description, memory, and data sources. ([more](02-architecture.md)) |
 | **LLM** (large language model) | The kind of AI behind ChatGPT / Claude: it reads messy text and produces useful text. It does the *judging*; everything around it is plumbing. |
-| **Model** | A specific AI you can call (e.g. Claude, DeepSeek, Gemini, Grok). Different models trade off cost, speed, and quality, so different jobs use different ones. |
-| **Scheduled job / cron** | A task set to run at a fixed time ("every day at 11:15", "every 30 minutes"). "Cron" is the decades-old unix name for a scheduler. The fleet runs ~35 of these a day. ([the schedule](06-the-schedule.md)) |
+| **Model** | A specific AI you can call (e.g. Claude, DeepSeek, Gemini, Kimi). Different models trade off cost, speed, and quality, so different jobs use different ones. |
+| **Scheduled job / cron** | A task set to run at a fixed time ("every day at 21:15", "every 30 minutes"). "Cron" is the decades-old unix name for a scheduler. The fleet runs ~60 of these a day. ([the schedule](06-the-schedule.md)) |
 | **Agent job vs no-agent job** | An **agent** job calls the AI (costs a little money). A **no-agent** job is a pure script with no AI (free). Most jobs are no-agent; the AI is reserved for genuine judgment. |
 | **Gateway** | The always-on process for one lane: it holds the lane's schedule, runs its jobs, and sends its messages. If a gateway is down, that lane goes quiet. |
 | **SOUL (SOUL.md)** | A plain-text "constitution" telling a lane's AI who it is and how to behave: tone, hard rules, what to never do. This is where the lanes differ most. ([example](../examples/SOUL.example.md)) |

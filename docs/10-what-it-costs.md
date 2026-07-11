@@ -14,7 +14,7 @@ Most write-ups of "my AI setup" are coy about money. Here's the honest version, 
 
 Three design choices keep the fleet's API bill in the tens, not hundreds:
 
-1. **No-agent by default.** Roughly two-thirds of the ~35 daily jobs never call the AI at all. Watchers, archivers, audits, and counters are deterministic code. The LLM is reserved for the genuinely hard part: reading messy input and judging what matters. (See [design principles](05-design-principles.md).)
+1. **No-agent by default.** Roughly three-quarters of the ~60 daily jobs never call the AI at all. Watchers, archivers, audits, and counters are deterministic code. The LLM is reserved for the genuinely hard part: reading messy input and judging what matters. (See [design principles](05-design-principles.md).)
 2. **Cheap-first routing.** Bulk work goes to a fast cheap model; only the few jobs that need real reasoning (the morning brief, the weekly synthesis) get a flagship. ([Architecture: the model router](02-architecture.md).)
 3. **One flagship call where it counts.** Five free watchers gather data first, so the one paid morning-brief call reads everything at once instead of paying for five separate AI passes. ([The fleet map](08-the-fleet-map.md).)
 

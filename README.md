@@ -81,9 +81,9 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 | [`docs/03-the-digest-pipeline.md`](docs/03-the-digest-pipeline.md) | A worked example: how the podcast digest turns 20 hours of audio into a 2-minute read |
 | [`docs/04-memory.md`](docs/04-memory.md) | How the agents *remember* things across days |
 | [`docs/05-design-principles.md`](docs/05-design-principles.md) | The hard-won rules (cost control, "only ping me when it matters", failure handling) |
-| [`docs/06-the-schedule.md`](docs/06-the-schedule.md) | **Every scheduled job (all ~35), how they connect, and how Telegram delivery works** |
+| [`docs/06-the-schedule.md`](docs/06-the-schedule.md) | **Every scheduled job (all ~60), how they connect, and how Telegram delivery works** |
 | [`docs/07-how-i-built-this.md`](docs/07-how-i-built-this.md) | The honest build story, stack, what took the time, and advice if you want to try |
-| [`docs/08-the-fleet-map.md`](docs/08-the-fleet-map.md) | **The fleet map: the whole system at a glance, then each lane up close, all ~35 jobs, every connection, and which ones ping Telegram** |
+| [`docs/08-the-fleet-map.md`](docs/08-the-fleet-map.md) | **The fleet map: the whole system at a glance, then each lane up close, all ~60 jobs, every connection, and which ones ping Telegram** |
 | [`docs/09-the-ops-lane.md`](docs/09-the-ops-lane.md) | **The fleet that watches the fleet: a command-centre readiness board, an hourly self-healing watchdog, and an "on-call SRE" ops bot** |
 | [`docs/10-what-it-costs.md`](docs/10-what-it-costs.md) | The honest money page: why the fleet is cheap, and what my ~$300/mo total actually covers |
 | [`docs/11-when-it-goes-wrong.md`](docs/11-when-it-goes-wrong.md) | A gallery of real failures and how each was caught: the most honest page here |

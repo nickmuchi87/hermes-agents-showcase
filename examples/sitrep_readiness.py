@@ -21,7 +21,7 @@ from __future__ import annotations
 
 # Freshness SLAs in hours. Beyond the SLA, a feed is RED even if it never errored.
 FEED_SLA = {
-    "x_trends": 16,            # refreshed morning + evening daily
+    "press_scan": 16,            # refreshed morning + evening daily
     "imf_publications": 48,
     "policy_commentary": 36,
     "ratings": 48,
@@ -61,13 +61,13 @@ def assess(probe: dict) -> dict:
         if icon == R:
             reds.append(f"feed {name}: {note}")
 
-    q = probe.get("x_quality")
+    q = probe.get("scan_quality")
     if q:
         icon, note = classify_quality(q["no_material"], q["window"])
         if icon == R:
-            reds.append(f"x_search quality: {note}")
+            reds.append(f"scan quality: {note}")
         elif icon == Y:
-            yellows.append(f"x_search quality: {note}")
+            yellows.append(f"scan quality: {note}")
 
     for name, status in probe.get("services", {}).items():
         if status != "active":
@@ -87,8 +87,8 @@ def assess(probe: dict) -> dict:
 def probe() -> dict:
     """STUB. The real version SSH-probes the host(s) for live status. Sample:"""
     return {
-        "feeds": {"x_trends": 5.0, "ratings": 15.1, "imf_publications": 60.0},  # imf is STALE (SLA 48h)
-        "x_quality": {"no_material": 7, "window": 10},                          # 70% empty -> RED
+        "feeds": {"press_scan": 5.0, "ratings": 15.1, "imf_publications": 60.0},  # imf is STALE (SLA 48h)
+        "scan_quality": {"no_material": 7, "window": 10},                          # 70% empty -> RED
         "services": {"agent-work": "active", "agent-mba": "active"},
         "crons": {"work": [{"name": "morning-brief", "last_status": "ok"}]},
     }

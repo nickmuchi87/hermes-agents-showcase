@@ -1,6 +1,6 @@
 # 8 · The fleet map: everything, on one page
 
-This is the **whole system in one picture**: every scheduled job across the three lanes, what each one does, how they connect, and exactly which ones reach my phone over Telegram.
+This is the **whole system in one picture**: every scheduled job across the fleet's four lanes, what each one does, how they connect, and exactly which ones reach my phone over Telegram.
 
 If you only look at one diagram in this repo, make it this one. (The [schedule](06-the-schedule.md) has the same jobs as tables with times; this is the *visual* of how they wire together.)
 
@@ -9,28 +9,28 @@ If you only look at one diagram in this repo, make it this one. (The [schedule](
 | Symbol | Meaning |
 |--------|---------|
 | 🧠 | **Agent job**: calls the AI to read, judge, and write. Costs a little money. |
-| ⚙️ | **No-agent job**: pure script, no AI, free. Most jobs are these. |
-| 📱 | **Pings my phone**: delivers to that lane's Telegram bot. |
+| ⚙️ | **No-agent job**: a script (deterministic, or one cheap model call). Most jobs are these. |
+| 📱 | **Pings my phone**: surfaces to that lane's Telegram bot. |
 | 🗃️ → memory | Writes data other jobs read later. I'm *not* pinged. |
 | dashed arrow | "Tomorrow reads yesterday", a memory loop across days. |
 
-> All times are **UTC**. My morning is ~11:00 UTC (≈ 6-7am US Eastern).
+> All times are **UTC**. My local morning is ~20:30 UTC.
 
 ---
 
 ## The whole fleet, on one page
 
-Because the fleet is ~35 jobs, one all-in-one graph renders too small to read on GitHub. So here it is in **two zooms**: first the *shape* of the whole thing, then **each lane up close** with every job. Same colour key throughout, **green = pings my phone**, purple = AI/agent, grey = free plumbing, amber = shared memory, blue = Telegram bots.
+The fleet is ~60 jobs, so one all-in-one graph renders too small to read on GitHub. So here it is in **two zooms**: first the *shape* of the whole thing, then **each content lane up close** with every job. Same colour key throughout, **green = pings my phone**, purple = AI/agent, grey = free plumbing, amber = shared memory, blue = Telegram bots.
 
 ### Zoom 1, the shape of the whole fleet
 
 ```mermaid
 flowchart LR
-    SRC["📡 SOURCES<br/>Gmail×3 · Calendar · Drive ·<br/>Bloomberg / IMF / ratings ·<br/>X · podcasts · markets"]:::src
-    WORK["💼 WORK · 17 jobs<br/>markets · credit · IMF · ratings"]:::work
-    MBA["🎓 MBA · 9 jobs<br/>coursework · deadlines"]:::mba
-    FAM["👨‍👩‍👧 FAMILY · 9 jobs<br/>school · relocation"]:::fam
-    OPS["🛟 OPS · watchdog + /health<br/>watches the other three"]:::ping
+    SRC["📡 SOURCES<br/>Gmail×3 · Calendar · Drive ·<br/>markets / IMF / ratings / press ·<br/>research · podcasts · Canvas"]:::src
+    WORK["💼 WORK · 21 jobs<br/>markets · credit · research"]:::work
+    MBA["🎓 MBA · 19 jobs<br/>coursework · deadlines · evals"]:::mba
+    FAM["👨‍👩‍👧 FAMILY · 10 jobs<br/>school · relocation"]:::fam
+    OPS["🛟 OPS · 12 jobs<br/>watches the other three"]:::ping
     MEM[("🧠 SHARED MEMORY")]:::mem
     BW(["🤖 Work bot"]):::bot
     BM(["🤖 MBA bot"]):::bot
@@ -62,30 +62,34 @@ flowchart LR
 
 Four lanes write into one shared memory and speak through four separate bots; the ops lane sits above and watches the other three. Now the detail, one lane at a time.
 
-### Zoom 2a, 💼 WORK lane (17 jobs)
+### Zoom 2a, 💼 WORK lane (21 jobs)
 
-The pattern to notice: five cheap **watchers** gather data first, then **one** AI brief reads all of it. Only four jobs ever ping me.
+The pattern to notice: a stack of cheap **watchers** gather data first, then **one** AI brief reads all of it. Green nodes are the ones that surface to me.
 
 ```mermaid
 flowchart TB
     subgraph WS["⚙️ watchers, gather first (cheap / free)"]
         direction LR
-        w_imf["10:10 Sun/Wed · imf-watcher<br/>IMF program news"]:::plumb
-        w_pol["10:30 · policy-commentary<br/>think-tank / policy RSS"]:::plumb
-        w_eml["🧠 10:45 · em_email_digest<br/>triage work inbox"]:::agent
-        w_rat["10:50 · rating-watcher<br/>rating-agency actions"]:::plumb
-        w_xam["10:55 · x-brief-am<br/>AM EM chatter (Grok)"]:::plumb
+        w_imf["20:20 · imf_watch<br/>IMF program news"]:::plumb
+        w_pol["20:30 · policy_commentary<br/>think-tank / policy RSS"]:::plumb
+        w_arx["20:30 · arxiv_research<br/>new research papers"]:::plumb
+        w_prs["20:40 · press_scan_am<br/>morning financial press"]:::plumb
+        w_rat["20:50 · rating_watcher<br/>rating-agency actions"]:::plumb
+        w_pub["20:55 · em_digest_publish<br/>assemble the digest"]:::plumb
     end
-    brief["🧠📱 11:15 · em-morning-brief<br/>reads ALL watchers + memory → the brief"]:::ping
-    arch["⚙️ 11:30 · em_brief_archive<br/>save brief → memory"]:::plumb
-    pos["⚙️ 11:32 · em_position_log<br/>snapshot positions"]:::plumb
-    poly["⚙️ 11:00 / 21:00 · polymarket_snapshot<br/>prediction-market odds"]:::plumb
-    news2["⚙️📱 every 2h Mon-Fri · em_news_triage<br/>Bloomberg, ping if market-moving"]:::ping
-    intra["⚙️📱 16:00 / 20:00 · x-intraday-alerter<br/>intraday X, ping if notable"]:::ping
-    xpm["⚙️ 21:00 · x-brief-pm<br/>PM EM chatter"]:::plumb
-    aaa["⚙️ 22:00 · em_after_action_audit<br/>day's calls vs outcomes"]:::plumb
-    eod["🧠📱 00:45 · em_eod_nudge<br/>EOD wrap: what moved, what needs me"]:::ping
+    eml["🧠📱 20:45 · em_email_digest<br/>triage work inbox"]:::ping
+    brief["🧠📱 21:15 · em_morning_brief<br/>reads ALL watchers + memory → the brief"]:::ping
+    kan["⚙️📱 21:00 · kanban_digest<br/>task-board state"]:::ping
+    arch["⚙️ 21:30 · em_brief_archive<br/>save brief → memory"]:::plumb
+    vault["⚙️ 21:45 · vault_daily_snapshot<br/>snapshot the data vault"]:::plumb
+    ingest["⚙️ 21:50 · agentmemory_ingest<br/>ingest the day → memory"]:::plumb
+    prspm["⚙️ 10:10 · press_scan_pm<br/>evening financial press"]:::plumb
+    eod["🧠📱 10:45 · em_eod_nudge<br/>EOD wrap: what moved, what needs me"]:::ping
     eoda["⚙️ 01:15 · em_eod_archive<br/>save EOD → memory"]:::plumb
+    pod["⚙️📱 Sun/Wed · podcast_weekly_synthesis<br/>cross-episode 2-min read"]:::ping
+    pq["⚙️📱 08:00 · podcast_queue_sync<br/>listen-queue + ratings"]:::ping
+    nwr["🧠📱 Sat · news_weekly_review<br/>the week's coverage"]:::ping
+    dash["⚙️📱 Sun · dashboard_monitor<br/>is the dashboard up?"]:::ping
     aud["⚙️ 03:55 · em_lane_audit<br/>self-check: did it all run?"]:::plumb
     drift["⚙️📱 04:30 · skills_drift_audit<br/>flag a stale skill"]:::ping
     mem[("🧠 memory")]:::mem
@@ -93,16 +97,19 @@ flowchart TB
 
     WS --> brief
     mem -. "yesterday's diff" .-> brief
-    poly -. "odds" .-> brief
     brief --> bot
+    eml --> bot
+    kan --> bot
     brief --> arch --> mem
-    pos --> mem
-    aaa --> mem
-    xpm --> eod
+    vault --> mem
+    ingest --> mem
+    prspm -. "context" .-> eod
     eod --> bot
     eod --> eoda --> mem
-    news2 --> bot
-    intra --> bot
+    pod --> bot
+    pq --> bot
+    nwr --> bot
+    dash --> bot
     drift --> bot
     aud -. "self-check" .-> mem
 
@@ -113,31 +120,50 @@ flowchart TB
     classDef bot fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:2px;
 ```
 
-### Zoom 2b, 🎓 MBA lane (9 jobs)
+### Zoom 2b, 🎓 MBA lane (19 jobs)
 
-Mostly quiet plumbing into memory; it pings me **once a week** with its smartest output, the cross-lane link between a podcast and a course.
+Two clusters: the **study help** (brief, chief-of-staff, pre-class packs, weekly notes) and the **guardrails** (evals, ledger invariants, Canvas reconciliation) that keep the coursework data honest. Its smartest weekly output is the cross-lane link between a podcast and a course.
 
 ```mermaid
 flowchart TB
-    drive["⚙️ every 30m · wemba_drive_watch<br/>watch Drive for new coursework"]:::plumb
-    pre["⚙️ every 30m · wemba_preclass_brief<br/>prep a brief if class is imminent"]:::plumb
-    brief["🧠 11:00 · daily_wemba_brief<br/>study brief: deadlines, materials, email"]:::agent
-    risk["🧠 12:00 · wemba_atrisk_radar<br/>flag deliverables at risk of slipping"]:::agent
-    sweep["⚙️ 13:00 · wemba_completion_sweep<br/>Drive vs deliverables, 'did you finish X?'"]:::plumb
-    eod["🧠 01:00 · wemba_eod_nudge<br/>end-of-day: tomorrow's prep"]:::agent
+    drive["⚙️ every 30m · drive_watch<br/>watch Drive for new coursework"]:::plumb
+    pre["⚙️ every 30m · preclass_brief<br/>prep a brief if class is imminent"]:::plumb
+    hb["⚙️ every 6h · canvas_heartbeat<br/>is the Canvas data fresh?"]:::plumb
+    brief["🧠📱 20:30 · daily_wemba_brief<br/>study brief: deadlines, materials, email"]:::ping
+    cos["🧠 21:00 · chief_of_staff<br/>deadlines + follow-through"]:::agent
+    coseod["🧠 09:00 · chief_of_staff_eod<br/>evening pass"]:::agent
+    radar["🧠 21:15 · prof_email_radar<br/>what in course email needs action"]:::agent
+    cal["⚙️ 21:00 · calendar_sync<br/>keep the class calendar true"]:::plumb
+    recon["⚙️📱 21:00 · assignment_reconcile<br/>assignments vs evidence they're done"]:::ping
+    ctruth["⚙️📱 20:40 · canvas_truth<br/>reconcile vs Canvas (source of truth)"]:::ping
+    pack["🧠📱 Mon/Thu · preclass_pack<br/>deeper prep before class days"]:::ping
+    eod["🧠 01:00 · wemba_eod_nudge<br/>tomorrow's prep"]:::agent
+    meval["⚙️📱 Sun · matcher_eval<br/>labeled matching regression suite"]:::ping
+    inv["⚙️📱 Sun · ledger_invariants<br/>completion-ledger invariants hold?"]:::ping
+    synth["🧠 Sun 22:00 · weekly_synthesis<br/>model panel writes course notes"]:::agent
+    load["🧠 Sun 22:00 · load_forecast<br/>next week's coursework load"]:::agent
+    cad["⚙️📱 Sun · canvas_cadence_report<br/>weekly coverage report"]:::ping
+    bridge["⚙️📱 Sun 23:30 · podcast_course_bridge<br/>links coursework ↔ podcast themes"]:::ping
     aud["⚙️ 03:55 · wemba_lane_audit<br/>self-check"]:::plumb
-    synth["⚙️ 22:00 Sun · wemba_weekly_synthesis<br/>week's coursework → memory"]:::plumb
-    bridge["⚙️📱 23:30 Sun · podcast_course_bridge<br/>links coursework ↔ podcast themes"]:::ping
     work["💼 Work lane's podcast<br/>insights (tag: startup-ai)"]:::agent
     mem[("🧠 shared memory")]:::mem
     bot(["🤖 MBA bot"]):::bot
 
     drive --> brief
     pre --> brief
-    brief --> risk
-    brief --> sweep
-    eod -. "prep" .-> mem
+    hb -. "freshness" .-> ctruth
+    brief --> bot
+    brief --> cos
+    cos --> recon
+    recon --> bot
+    ctruth --> bot
+    radar -. "actions" .-> mem
+    pack --> bot
+    meval --> bot
+    inv --> bot
+    cad --> bot
     synth --> mem
+    load -. "forecast" .-> mem
     work --> mem
     mem -. "course themes + podcast insights" .-> bridge
     bridge --> bot
@@ -149,9 +175,9 @@ flowchart TB
     classDef bot fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:2px;
 ```
 
-### Zoom 2c, 👨‍👩‍👧 FAMILY lane (9 jobs)
+### Zoom 2c, 👨‍👩‍👧 FAMILY lane (10 jobs)
 
-The most time-sensitive lane (school + an international move), so it polls often during waking hours and the move-day countdown is allowed to get louder as we get closer.
+The most time-sensitive lane (school + an international move), so it polls often during waking hours and the relocation jobs are allowed to get louder as move-day nears.
 
 ```mermaid
 flowchart TB
@@ -159,22 +185,26 @@ flowchart TB
         direction LR
         imm["family_imminent · :00/:30<br/>imminent calendar events"]:::ping
         reloc["relocation_emails · :15<br/>relocation email"]:::ping
-        school["school_email_check · hourly 11-23<br/>school emails, tiered by sender"]:::ping
     end
-    brief["🧠 11:00 · daily_family_brief<br/>morning brief: today's events + actions"]:::agent
-    arch["⚙️ 11:15 · family_brief_archive<br/>save brief → memory"]:::plumb
-    cd["⚙️ 12:00 · family_au_countdown<br/>move-day countdown (T-30/14/7/3/1)"]:::plumb
-    sweep["⚙️📱 12:00 Sun · relocation_sweep<br/>weekly relocation checklist"]:::ping
-    rent["⚙️📱 every 48h · au_rental_search<br/>scan rentals in destination city"]:::ping
+    cos["🧠 20:00 · chief_of_staff<br/>pull tasks + check follow-through"]:::agent
+    brief["🧠📱 20:30 · daily_family_brief<br/>morning brief: today's events + actions"]:::ping
+    arch["⚙️ 20:45 · family_brief_archive<br/>save brief → memory"]:::plumb
+    adv["🧠📱 21:00 · family_advisor<br/>proactive guidance + flags"]:::ping
+    rent["⚙️📱 21:15 · rental_email_alerts<br/>new rentals in destination city"]:::ping
+    ins["⚙️📱 Sun · family_insights_digest<br/>weekly, what the lane learned"]:::ping
+    sweep["⚙️📱 Sun · relocation_sweep<br/>weekly relocation checklist"]:::ping
     aud["⚙️ 03:55 · family_lane_audit<br/>self-check"]:::plumb
     mem[("🧠 memory")]:::mem
     bot(["🤖 Family bot"]):::bot
 
-    cd -. "urgency" .-> brief
+    cos -. "ledger" .-> brief
     brief --> arch --> mem
+    brief --> bot
+    adv --> bot
     POLL --> bot
-    sweep --> bot
     rent --> bot
+    ins --> bot
+    sweep --> bot
     aud -. "self-check" .-> mem
 
     classDef agent fill:#ede7f6,stroke:#5e35b1,color:#311b92;
@@ -184,9 +214,9 @@ flowchart TB
     classDef bot fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,stroke-width:2px;
 ```
 
-> The **ops lane** (the 4th, supervisory one) has its own close-up in [09 · The ops lane](09-the-ops-lane.md).
+> The **ops lane** (the 4th, supervisory one, 12 jobs) has its own close-up in [09 · The ops lane](09-the-ops-lane.md).
 
-**Green nodes ping my phone.** Purple nodes think (AI). Grey nodes are free plumbing into the amber memory store. That's the whole fleet: ~35 jobs, and only a handful ever interrupt me.
+**Green nodes ping my phone.** Purple nodes think (AI). Grey nodes are free plumbing into the amber memory store. That's the whole fleet: ~60 jobs, and only the briefs, digests and alerts ever interrupt me, the watchers stay silent.
 
 ---
 
@@ -198,26 +228,30 @@ The single most important design choice is **restraint**: most jobs never reach 
 flowchart LR
     subgraph work["💼 WORK bot"]
         direction TB
-        a1["em-morning-brief · 11:15<br/>the daily market brief"]
-        a2["em_news_triage · every 2h<br/>only if market-moving"]
-        a3["x-intraday-alerter · 16:00/20:00<br/>only if notable"]
-        a4["em_eod_nudge · 00:45<br/>end-of-day wrap"]
-        a5["skills_drift_audit · 04:30<br/>'a skill went stale'"]
-        a6["podcast digest · 3×/wk<br/>the 2-min read"]
+        a1["em_morning_brief · 21:15<br/>the daily market brief"]
+        a2["em_email_digest · 20:45<br/>inbox triage"]
+        a3["em_eod_nudge · 10:45<br/>end-of-day wrap"]
+        a4["podcast synthesis / queue<br/>the 2-min read + listen-queue"]
+        a5["news_weekly_review · Sat<br/>the week's coverage"]
+        a6["skills_drift_audit · 04:30<br/>'a skill went stale'"]
     end
     subgraph mba["🎓 MBA bot"]
-        b1["podcast_course_bridge · Sun 23:30<br/>'this episode maps to your paper'"]
+        b1["daily_wemba_brief · 20:30<br/>deadlines + new materials"]
+        b2["preclass_pack · Mon/Thu<br/>prep before class"]
+        b3["assignment_reconcile / canvas_truth<br/>'did you finish X?'"]
+        b4["podcast_course_bridge · Sun<br/>'this episode maps to your paper'"]
     end
     subgraph fam["👨‍👩‍👧 FAMILY bot"]
         c1["family_imminent · :00/:30<br/>event starting soon"]
         c2["relocation_emails · :15<br/>relocation mail landed"]
-        c3["school_email_check · hourly<br/>tiered by sender importance"]
-        c4["relocation_sweep · Sun 12:00<br/>weekly checklist"]
-        c5["au_rental_search · every 48h<br/>new rentals found"]
+        c3["family_advisor · 21:00<br/>proactive guidance"]
+        c4["rental_email_alerts · 21:15<br/>new rentals found"]
+        c5["relocation_sweep · Sun<br/>weekly checklist"]
     end
     subgraph ops["🛟 OPS bot"]
-        d1["self-heal watchdog · hourly<br/>only if it escalated something"]
-        d2["/health · on demand<br/>I ask, it answers"]
+        d1["self_heal_watchdog · hourly<br/>only if it escalated something"]
+        d2["fleet_health / morning_ops_digest<br/>readiness, before the briefs"]
+        d3["/health · on demand<br/>I ask, it answers"]
     end
 
     work --> phone(["📱 my phone"])
@@ -230,21 +264,21 @@ flowchart LR
     class work,mba,fam,ops g;
 ```
 
-Notice the asymmetry: the **family** bot is the chattiest (school + an international move are time-sensitive), the **work** bot fires on a predictable rhythm with two "only-if-it-matters" interrupters, the **MBA** bot deliberately pings *once a week* with its smartest output, the cross-lane link between a podcast and a course, and the **ops** bot stays silent unless the fleet itself needs help (or I ask it `/health`). Everything else those lanes do is quiet plumbing into memory. (The ops lane gets its own chapter: [09 · The ops lane →](09-the-ops-lane.md).)
+Notice the asymmetry: the **family** bot is the chattiest (school + an international move are time-sensitive), the **work** bot fires on a predictable rhythm around the morning brief, the **MBA** bot surfaces a daily study brief plus its smartest weekly output (the cross-lane podcast↔course link), and the **ops** bot stays quiet unless the fleet itself needs help (or I ask it `/health`). Everything else those lanes do is quiet plumbing into memory. (The ops lane gets its own chapter: [09 · The ops lane →](09-the-ops-lane.md).)
 
-And it's **two-way**: every bot is a conversation, not a broadcast. I reply `done: <thing>` and the agent marks it complete in memory; I can ask `/podcast_q oil Iran` and it searches the corpus on demand. (More in [memory](04-memory.md).)
+And it's **two-way**: every bot is a conversation, not a broadcast. I reply `done: <thing>` and the agent marks it complete in memory; I can ask a corpus query and it searches on demand. (More in [memory](04-memory.md).)
 
 ---
 
 ## The three connection patterns worth noticing
 
-Strip away the 35 boxes and there are really only **three wiring tricks** doing the work:
+Strip away the sixty boxes and there are really only **three wiring tricks** doing the work:
 
 ```mermaid
 flowchart LR
     subgraph p1["1 · Watchers feed the brief"]
         direction TB
-        w["5 cheap ⚙️ watchers<br/>gather data first"] --> b["1 🧠 brief reads<br/>all of it at once"]
+        w["cheap ⚙️ watchers<br/>gather data first"] --> b["1 🧠 brief reads<br/>all of it at once"]
     end
     subgraph p2["2 · Memory loops across days"]
         direction TB
@@ -259,8 +293,8 @@ flowchart LR
     end
 ```
 
-1. **Watchers → brief.** Five free scripts do the gathering so the *one* paid AI call only does the judging. (Cost control, [design principles](05-design-principles.md).)
-2. **Memory across days.** A brief is archived the moment it's sent, so tomorrow's can open with a diff, *"since yesterday: S&P upgraded SA outlook."*
+1. **Watchers → brief.** Several free scripts do the gathering so the *one* paid AI call only does the judging. (Cost control, [design principles](05-design-principles.md).)
+2. **Memory across days.** A brief is archived the moment it's sent, so tomorrow's can open with a diff, *"since yesterday: S&P upgraded the outlook."*
 3. **Lanes collaborate.** The work lane's podcast insights and the MBA lane's course themes live in the same memory; a Sunday job reads both and spots the overlap. Two agents that never call each other still cooperate, through shared memory. (See [memory](04-memory.md).)
 
 ---
