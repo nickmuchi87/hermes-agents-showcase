@@ -43,6 +43,20 @@ Two agents, different jobs, different schedules, collaborating through shared me
 **3. Learning what's noise**
 When something gets flagged but turns out to be irrelevant, that judgment is remembered, so the same non-event doesn't page me again next week.
 
+## Wait, doesn't "shared memory" contradict "lanes never bleed"?
+
+Fair question, it's the one sharp readers always ask. The answer is that **sharing is narrow and deliberate**: lanes share *derived, tagged insights*, never their raw inputs, credentials, or personalities. Here's the exact boundary:
+
+| State | Shared between lanes? | How it's controlled |
+|-------|----------------------|---------------------|
+| Persona / job description (SOUL) | ❌ Never | One per lane; the family agent literally doesn't know what a bond spread is |
+| Credentials (email, calendar, Drive) | ❌ Never | Separate accounts and scopes per lane |
+| Raw inputs (emails, documents, feeds) | ❌ Never | Stay lane-local; other lanes can't read them |
+| Derived insights (podcast themes, course topics, brief archives) | ✅ Selectively | Written to the memory service **tagged by topic**; a lane reads only the tags relevant to its job |
+| Operational health (job status, errors, feed ages) | ✅ Read-only | The ops lane reads every lane's ledgers, but never their content |
+
+So when the MBA lane "reads the work lane's podcast insights", it's reading a short, tagged summary the work lane *chose to publish* into memory, not the work lane's inbox. The raw firehose never crosses a lane boundary; only conclusions do.
+
 ## Why a dedicated service (not just files)?
 
 Early versions wrote notes to plain text files synced between machines. It worked until it didn't, two processes writing at once would corrupt things. A proper memory service handles **versioning** (a memory can be superseded by a newer version) and **concurrent access** safely. The lesson: as soon as multiple agents share state, treat that state like a real database, not a scratchpad.

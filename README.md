@@ -1,4 +1,4 @@
-# Three AI Agents That Run My Life
+# Three AI Agents That Run My Life, and One That Keeps Them Alive
 
 ![Three AI agents: Work, MBA, Family](images/hero.png)
 
@@ -6,15 +6,15 @@
 
 I'm an emerging-markets fixed-income portfolio manager, a part-time Wharton EMBA student, and a dad relocating a family across the world. Three different lives, three different streams of email/calendars/documents/news, and not enough hours.
 
-So I built three AI agents, one per life, that read the firehose, decide what actually matters, and message me only when something needs me. This repo explains **how they work and why**, with diagrams and (sanitized) real code.
+So I built the fleet: **three user-facing agents run my work, school, and family workflows. A fourth, supervisory agent watches the fleet itself**, fixing the safe stuff on its own and asking me about the rest. Together they run about 60 scheduled jobs a day, but stay silent unless something actually needs me.
 
-It is deliberately written for a **non-technical reader**. If you've heard "AI agents" and thought *"...okay but what does that actually mean in practice?"*, this is for you.
+This is not a product or a clone-and-run template. It is a **field guide** to what worked, what failed, what it costs, and the guardrails that make always-on agents tolerable in real life. It is deliberately written for a **non-technical reader**. If you've heard "AI agents" and thought *"...okay but what does that actually mean in practice?"*, this is for you.
 
 ---
 
 ## The one-paragraph version
 
-Each agent ("lane") is a long-running program that wakes up on a schedule, gathers information from my email/calendar/documents/news feeds, runs it through a large language model (the same kind of AI behind ChatGPT/Claude) with a **specific job description and memory**, and then sends me a short, human Telegram message. It does this on its own, ~30 times a day, across three separate "lanes" so my work brain, school brain, and family brain never bleed into each other.
+Each agent ("lane") is a long-running program that wakes up on a schedule, gathers information from my email/calendar/documents/news feeds, runs it through a large language model (the same kind of AI behind ChatGPT/Claude) with a **specific job description and memory**, and then sends me a short, human Telegram message, only when something's worth my attention. The fleet does this on its own, ~60 scheduled jobs a day, across three separate content "lanes" so my work brain, school brain, and family brain never bleed into each other, while the fourth lane watches the other three.
 
 ```
    📨 emails        📅 calendars       📰 news/RSS        📑 documents
@@ -28,38 +28,43 @@ Each agent ("lane") is a long-running program that wakes up on a schedule, gathe
    │   markets, credit,    course prep,          school, relocation,│
    │   IMF, ratings        deliverables          calendar           │
    └─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-                  📱 short Telegram messages, only when it matters
+              ▲                   │
+              │ safe auto-fixes   ▼
+   ┌──────────┴──────────┐   📱 short Telegram messages,
+   │ 🛟 OPS lane watches  │      only when it matters
+   │ the other three     │
+   └─────────────────────┘
 ```
 
 ---
 
-## Why three separate agents instead of one?
+## Why separate agents instead of one?
 
 Because **context is everything**, and mixing it makes the AI worse at all three jobs.
 
 - My **work** agent knows it's a sovereign-credit PM. It cares about Egypt's IMF program and Brazilian rates. It should *never* surface my daughter's school newsletter.
 - My **MBA** agent knows my Wharton courses and deliverables. It links a podcast on startup unit-economics to my entrepreneurship class.
 - My **family** agent knows we're relocating, knows the kids' schools, and counts down to move-day. It should never page me about bond spreads.
+- And the **ops** agent knows nothing about any of that: its whole world is "did every job run, is every feed fresh, what needs fixing."
 
-Same underlying AI, three different **"job descriptions" + memories + data sources**. That separation is the whole trick.
+Same underlying AI, four different **"job descriptions" + memories + data sources**. That separation is the whole trick.
 
 | Lane | Role | Watches | Example output |
 |------|------|---------|----------------|
-| 💼 **Work** (`em`) | EM sovereign-credit chief-of-staff | Bloomberg, IMF, rating agencies, EM podcasts, prediction markets | "Morning brief: Nigeria OW under pressure, Brent <$90; S&P upgraded SA outlook." |
-| 🎓 **MBA** (`wemba`) | EMBA study partner | Google Drive coursework, Wharton email, class calendar | "Pre-class brief: OIDD 6360 case due Thu; a podcast this week maps to your scaling-ops paper." |
+| 💼 **Work** (`em`) | EM sovereign-credit chief-of-staff | Financial press, IMF, rating agencies, EM podcasts, research | "Morning brief: Nigeria OW under pressure, Brent <$90; S&P upgraded SA outlook." |
+| 🎓 **MBA** (`wemba`) | EMBA study partner | Google Drive coursework, Wharton email, class calendar, Canvas | "Pre-class brief: OIDD 6360 case due Thu; a podcast this week maps to your scaling-ops paper." |
 | 👨‍👩‍👧 **Family** (`family`) | Household logistics assistant | School emails, relocation tasks, family calendar | "T-14 to the move. Patricia (school) sent enrolment forms, due Friday." |
+| 🛟 **Ops** (`ops`) | On-call SRE for the fleet | The other three lanes' jobs, feeds, and services | "Repaired a torn login token at 22:00; everything else green." |
 
-Everything reaches me the same way: **three separate Telegram bots**, one per lane, and only when something's worth my attention.
+Everything reaches me the same way: **separate Telegram bots**, one per lane, and only when something's worth my attention.
 
-![Three Telegram bots messaging only when it matters](images/telegram-bots.png)
+![Telegram bots messaging only when it matters](images/telegram-bots.png)
 
 ### See it in action
 
 > 📸 *Real screenshots of the bots in daily use live in [`images/screenshots/`](images/screenshots/).*
 
-**MBA bot — daily WEMBA brief:** deadlines, what's new in Drive, and what's worth noting, pushed each morning.
+**MBA bot, the daily WEMBA brief:** deadlines, what's new in Drive, and what's worth noting, pushed each morning.
 
 ![WEMBA daily brief: pending deadlines, new Drive files, and worth-noting items](images/screenshots/mba-preclass.png)
 
@@ -72,42 +77,25 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 
 ---
 
-## What's in this repo
+## Where to start
 
-| File | What it shows |
-|------|---------------|
-| [`docs/01-what-is-an-agent.md`](docs/01-what-is-an-agent.md) | Plain-English: what an "agent" actually is, vs. a chatbot |
-| [`docs/02-architecture.md`](docs/02-architecture.md) | The full system, with diagrams |
-| [`docs/03-the-digest-pipeline.md`](docs/03-the-digest-pipeline.md) | A worked example: how the podcast digest turns 20 hours of audio into a 2-minute read |
-| [`docs/04-memory.md`](docs/04-memory.md) | How the agents *remember* things across days |
-| [`docs/05-design-principles.md`](docs/05-design-principles.md) | The hard-won rules (cost control, "only ping me when it matters", failure handling) |
-| [`docs/06-the-schedule.md`](docs/06-the-schedule.md) | **Every scheduled job (all ~60), how they connect, and how Telegram delivery works** |
-| [`docs/07-how-i-built-this.md`](docs/07-how-i-built-this.md) | The honest build story, stack, what took the time, and advice if you want to try |
-| [`docs/08-the-fleet-map.md`](docs/08-the-fleet-map.md) | **The fleet map: the whole system at a glance, then each lane up close, all ~60 jobs, every connection, and which ones ping Telegram** |
-| [`docs/09-the-ops-lane.md`](docs/09-the-ops-lane.md) | **The fleet that watches the fleet: a command-centre readiness board, an hourly self-healing watchdog, and an "on-call SRE" ops bot** |
-| [`docs/10-what-it-costs.md`](docs/10-what-it-costs.md) | The honest money page: why the fleet is cheap, and what my ~$300/mo total actually covers |
-| [`docs/11-when-it-goes-wrong.md`](docs/11-when-it-goes-wrong.md) | A gallery of real failures and how each was caught: the most honest page here |
-| [`docs/12-faq.md`](docs/12-faq.md) | The questions people actually ask (privacy, cost, "why not just ChatGPT", could I build one) |
-| [`docs/13-glossary.md`](docs/13-glossary.md) | Plain-English definitions of every term, no prior knowledge assumed |
-| [`docs/14-the-ai-pm.md`](docs/14-the-ai-pm.md) | **The AI portfolio manager: an agent that makes a real (paper) decision daily, gather → deliberate → commit → memo, under guardrails** |
-| [`docs/15-cross-episode-synthesis.md`](docs/15-cross-episode-synthesis.md) | **From episodes to insight: how per-episode summaries become a cross-episode synthesis (themes, expert voices, challenges to my positions) that also feeds coursework and notes** |
-| [`docs/16-the-chief-of-staff.md`](docs/16-the-chief-of-staff.md) | **The chief-of-staff: the layer that tracks follow-through, not just deadlines, and checks for *evidence* a task got done** |
-| [`docs/17-the-fleet-that-fixes-itself.md`](docs/17-the-fleet-that-fixes-itself.md) | **The fleet that fixes itself (carefully): a self-healing watchdog and a shadow-mode remediation agent that proposes safe fixes and escalates the rest** |
-| [`docs/18-many-minds-one-call.md`](docs/18-many-minds-one-call.md) | **Many minds, one call: a mixture-of-agents experiment where several models vote on one AI-PM decision, with automatic fallback to the trusted single model** |
-| [`docs/19-the-family-lane-learns-to-see.md`](docs/19-the-family-lane-learns-to-see.md) | **The family lane learns to see: a vision model that judges house-listing *photos* to filter and rank our relocation rental search** |
-| [`docs/20-the-study-companion.md`](docs/20-the-study-companion.md) | **The study companion: a model panel writes citation-checked weekly course notes, notices when a course ends, writes its capstone, and keeps the calendar true** |
-| [`docs/21-evals-as-tripwires.md`](docs/21-evals-as-tripwires.md) | **Evals as tripwires: the day all four bots went quietly wrong, and the labeled regression suite that now guards the fleet** |
-| [`docs/22-the-queue-that-learns-my-taste.md`](docs/22-the-queue-that-learns-my-taste.md) | **The queue that learns my taste: a shared podcast listen-queue I rate in plain words, so the fleet stops guessing what I want and learns it from my own verdicts** |
-| [`examples/`](examples/) | Sanitized excerpts of the real code |
-| [`images/`](images/) | Rendered workflow visuals |
+The full field guide is **22 chapters**: the [complete index is in `docs/`](docs/README.md). The highlights:
 
-### New here? A reading path
+| Featured chapter | Why read it |
+|------------------|-------------|
+| [01 · What is an agent?](docs/01-what-is-an-agent.md) | Plain-English: what an "agent" actually is, vs. a chatbot |
+| [05 · Design principles](docs/05-design-principles.md) | The hard-won rules: cost control, "only ping me when it matters", failure handling |
+| [08 · The fleet map](docs/08-the-fleet-map.md) | The whole system on one page: every job, every connection, and which ones ping my phone |
+| [10 · What it costs](docs/10-what-it-costs.md) | The honest money page |
+| [11 · When it goes wrong](docs/11-when-it-goes-wrong.md) | A gallery of real failures and how each was caught: the most honest page here |
+| [21 · Evals as tripwires](docs/21-evals-as-tripwires.md) | The day all four bots went quietly wrong, and the regression suite that now guards the fleet |
+| [22 · The queue that learns my taste](docs/22-the-queue-that-learns-my-taste.md) | The fleet stops guessing what I want and learns it from my own plain-word verdicts |
+
+### A reading path, by who you are
 
 - **Total beginner:** [01 What is an agent](docs/01-what-is-an-agent.md) → [03 A worked example](docs/03-the-digest-pipeline.md) → [04 Memory](docs/04-memory.md) → [12 FAQ](docs/12-faq.md). Keep [13 Glossary](docs/13-glossary.md) open in a tab.
 - **Want the architecture:** [02 Architecture](docs/02-architecture.md) → [08 The fleet map](docs/08-the-fleet-map.md) → [09 The ops lane](docs/09-the-ops-lane.md) → [05 Design principles](docs/05-design-principles.md).
 - **Thinking of building one:** [07 How I built this](docs/07-how-i-built-this.md) (incl. a step-by-step Hermes tutorial) → [05 Design principles](docs/05-design-principles.md) → [10 What it costs](docs/10-what-it-costs.md) → [`examples/`](examples/).
-- **Just want the honest reality:** [11 When it goes wrong](docs/11-when-it-goes-wrong.md) and [10 What it costs](docs/10-what-it-costs.md).
-- **Recently added:** [19 The family lane learns to see](docs/19-the-family-lane-learns-to-see.md) (vision) → [20 The study companion](docs/20-the-study-companion.md) (coursework end to end) → [21 Evals as tripwires](docs/21-evals-as-tripwires.md) (guarding the fleet) → [22 The queue that learns my taste](docs/22-the-queue-that-learns-my-taste.md) (self-teaching recommendations).
 
 ---
 
@@ -116,6 +104,7 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 - **This is a personal setup, not a product.** It's shared to *explain a way of working*, not as something to clone-and-run. Secrets, tokens, and personal data have been removed.
 - **It costs real (small) money.** The agents call commercial AI APIs. The fleet itself stays cheap by design; the full, honest breakdown (and what my larger ~$300/mo AI habit actually covers) is in [what it costs](docs/10-what-it-costs.md).
 - **The AI is a junior assistant, not an oracle.** It triages and drafts; I decide. Every design choice assumes it will sometimes be wrong.
+- **Context stays put.** Lanes don't share personas, credentials, or raw data; only tagged, derived insights cross lanes, deliberately. The exact boundary is a table in [04 · Memory](docs/04-memory.md), and the privacy trade-offs are in the [FAQ](docs/12-faq.md).
 
 ---
 
@@ -124,5 +113,13 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 Built on [Hermes Agent](https://hermes-agent.nousresearch.com) (an open agent runtime), reachable over Telegram, with a local memory service, scheduled jobs ("crons"), and a mix of language models routed by cost/quality (Claude, DeepSeek, Gemini). Everything runs on one small cloud server. You do **not** need to know any of that to read the docs above, they start from zero.
 
 **Want a hands-on intro to Hermes itself?** This step-by-step video is a good place to start: [Hermes Agent Tutorial for Beginners, Step by Step](https://www.youtube.com/watch?v=LvWobwr0Neg).
+
+---
+
+## Where to go next
+
+- 📖 **Read the field guide:** the [full 22-chapter index](docs/README.md).
+- 🧪 **Run the examples:** several of the sanitized scripts in [`examples/`](examples/) run as-is, no keys or setup needed; see the [examples README](examples/README.md).
+- 🛠️ **Build your own:** start with [07 · How I built this](docs/07-how-i-built-this.md).
 
 *Questions? This was built and documented collaboratively with Claude (Anthropic). The architecture is real and in daily use.*

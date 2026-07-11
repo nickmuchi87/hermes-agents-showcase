@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  examples:
+    name: Examples compile and run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: All Python examples compile
+        run: python -m py_compile examples/*.py
+      - name: Standalone examples run (no keys, no network)
+        run: |
+          set -e
+          for f in sitrep_readiness fleet_health self_heal_watchdog pm_decision_loop; do
+            echo "=== examples/$f.py ==="
+            python "examples/$f.py"
+          done
+
+  links:
+    name: Internal markdown links resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check relative links and images
+        run: python .github/check_links.py

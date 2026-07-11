@@ -1,38 +1,44 @@
 # Sanitized code examples
 
-These are **redacted excerpts** of the real, in-use code, trimmed to illustrate
-a pattern, with all tokens, keys, file paths, and personal data removed or
-genericised. They are here to make the [docs](../docs/) concrete, not to run as-is.
+**The contract:** this repository is an architectural field guide, not a clone-and-run template. The files here are **redacted excerpts** of the real, in-use code, trimmed to illustrate a pattern, with all tokens, keys, file paths, and personal data removed or genericised. They exist to make the [docs](../docs/) concrete. The production versions have more error handling, logging, and edge-case logic; the noise has been stripped so the *idea* is visible.
 
-| File | Pattern it illustrates |
-|------|------------------------|
-| [`model_fallback.py`](model_fallback.py) | Cheap-first model routing with a fallback chain (design principle #2 & #3) |
-| [`cli_circuit_breaker.py`](cli_circuit_breaker.py) | The "one failure trips the breaker, stop retrying" safeguard (#3) |
-| [`sanitize_dont_reject.py`](sanitize_dont_reject.py) | Drop the one bad item, keep the rest (#4) |
-| [`corpus_search.py`](corpus_search.py) | A no-AI, free keyword search over agent memory (#2) |
-| [`agent_to_memory.py`](agent_to_memory.py) | How an agent writes a structured memory other agents can read (memory doc) |
-| [`SOUL.example.md`](SOUL.example.md) | A lane's "job description" / constitution (architecture doc) |
+That said, several of them **do run standalone** (standard library only, no keys, no setup) with a built-in sample scenario, so you can see the pattern behave rather than just read it. Those are marked ▶️ below, and CI runs them on every push.
 
-### The ops / fleet-health tooling
+```bash
+python3 sitrep_readiness.py     # the readiness scoring, with a sample probe
+python3 fleet_health.py         # the /health check, sample fleet state
+python3 self_heal_watchdog.py   # the safe-remediation whitelist, dry scenario
+python3 pm_decision_loop.py     # the AI PM's daily loop, stubbed model calls
+```
+
+## The reliability patterns
+
+| File | Runs? | Pattern it illustrates |
+|------|:-----:|------------------------|
+| [`model_fallback.py`](model_fallback.py) | 📖 | Cheap-first model routing with a fallback chain (design principle #2 & #3) |
+| [`cli_circuit_breaker.py`](cli_circuit_breaker.py) | 📖 | The "one failure trips the breaker, stop retrying" safeguard (#3) |
+| [`sanitize_dont_reject.py`](sanitize_dont_reject.py) | 📖 | Drop the one bad item, keep the rest (#4) |
+| [`corpus_search.py`](corpus_search.py) | 🔌 | A no-AI, free keyword search over agent memory (#2) |
+| [`agent_to_memory.py`](agent_to_memory.py) | 🔌 | How an agent writes a structured memory other agents can read (memory doc) |
+| [`SOUL.example.md`](SOUL.example.md) | 📖 | A lane's "job description" / constitution (architecture doc) |
+
+## The ops / fleet-health tooling
 
 The actual scripts behind [docs/09 (the ops lane)](../docs/09-the-ops-lane.md) and [docs/11 (when it goes wrong)](../docs/11-when-it-goes-wrong.md), lightly sanitized (real hosts, IPs, emails, and paths replaced with placeholders; logic unchanged):
 
-| File | What it is |
-|------|------------|
-| [`fleet_health.py`](fleet_health.py) | The deterministic, no-LLM status check behind the ops bot's `/health` command |
-| [`self_heal_watchdog.py`](self_heal_watchdog.py) | Hourly self-healing: a safe/reversible remediation whitelist that escalates everything else |
-| [`sitrep_readiness.py`](sitrep_readiness.py) | The "command centre" scoring core: feed-freshness SLAs, output-quality scoring, and the readiness roll-up |
-| [`skill_drift_audit.sh`](skill_drift_audit.sh) | Nightly captured-skill drift detector (real dir vs curated symlink) |
-| [`skill_lint.py`](skill_lint.py) | The deterministic gate that rejects skills referencing fictional tools |
-| [`skillify.sh`](skillify.sh) | Triages a drift: lint, then print the promote-or-delete commands for a human |
+| File | Runs? | What it is |
+|------|:-----:|------------|
+| [`fleet_health.py`](fleet_health.py) | ▶️ | The deterministic, no-LLM status check behind the ops bot's `/health` command |
+| [`self_heal_watchdog.py`](self_heal_watchdog.py) | ▶️ | Hourly self-healing: a safe/reversible remediation whitelist that escalates everything else |
+| [`sitrep_readiness.py`](sitrep_readiness.py) | ▶️ | The "command centre" scoring core: feed-freshness SLAs, output-quality scoring, and the readiness roll-up |
+| [`skill_drift_audit.sh`](skill_drift_audit.sh) | 🔌 | Nightly captured-skill drift detector (real dir vs curated symlink) |
+| [`skill_lint.py`](skill_lint.py) | 🔌 | The deterministic gate that rejects skills referencing fictional tools (pass it a SKILL.md) |
+| [`skillify.sh`](skillify.sh) | 🔌 | Triages a drift: lint, then print the promote-or-delete commands for a human |
 
-### The AI PM
+## The AI PM
 
-| File | What it is |
-|------|------------|
-| [`pm_decision_loop.py`](pm_decision_loop.py) | Sketch of the AI portfolio manager's daily decision: cheap signal-gather → budget-capped deliberation → commit weights → memo ([docs/14](../docs/14-the-ai-pm.md)). Runs as-is with stubbed model calls. |
+| File | Runs? | What it is |
+|------|:-----:|------------|
+| [`pm_decision_loop.py`](pm_decision_loop.py) | ▶️ | Sketch of the AI portfolio manager's daily decision: cheap signal-gather → budget-capped deliberation → commit weights → memo ([docs/14](../docs/14-the-ai-pm.md)). Stubbed model calls. |
 
-> Every file here is illustrative. The production versions have more error
-> handling, logging, and edge-case logic; the noise has been stripped so the
-> *idea* is visible. The Python ones run as-is; `sitrep_readiness.py` even
-> ships a sample probe so you can run it and see the scoring.
+**Key:** ▶️ runs as-is offline (standard library, sample data built in, verified in CI) · 🔌 needs the live fleet, a running memory service, or arguments · 📖 illustrative excerpt, read it rather than run it.
