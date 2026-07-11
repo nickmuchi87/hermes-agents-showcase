@@ -95,6 +95,8 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 | [`docs/17-the-fleet-that-fixes-itself.md`](docs/17-the-fleet-that-fixes-itself.md) | **The fleet that fixes itself (carefully): a self-healing watchdog and a shadow-mode remediation agent that proposes safe fixes and escalates the rest** |
 | [`docs/18-many-minds-one-call.md`](docs/18-many-minds-one-call.md) | **Many minds, one call: a mixture-of-agents experiment where several models vote on one AI-PM decision, with automatic fallback to the trusted single model** |
 | [`docs/19-the-family-lane-learns-to-see.md`](docs/19-the-family-lane-learns-to-see.md) | **The family lane learns to see: a vision model that judges house-listing *photos* to filter and rank our relocation rental search** |
+| [`docs/20-the-study-companion.md`](docs/20-the-study-companion.md) | **The study companion: a model panel writes citation-checked weekly course notes, notices when a course ends, writes its capstone, and keeps the calendar true** |
+| [`docs/21-evals-as-tripwires.md`](docs/21-evals-as-tripwires.md) | **Evals as tripwires: the day all four bots went quietly wrong, and the labeled regression suite that now guards the fleet** |
 | [`examples/`](examples/) | Sanitized excerpts of the real code |
 | [`images/`](images/) | Rendered workflow visuals |
 
@@ -104,7 +106,7 @@ Everything reaches me the same way: **three separate Telegram bots**, one per la
 - **Want the architecture:** [02 Architecture](docs/02-architecture.md) → [08 The fleet map](docs/08-the-fleet-map.md) → [09 The ops lane](docs/09-the-ops-lane.md) → [05 Design principles](docs/05-design-principles.md).
 - **Thinking of building one:** [07 How I built this](docs/07-how-i-built-this.md) (incl. a step-by-step Hermes tutorial) → [05 Design principles](docs/05-design-principles.md) → [10 What it costs](docs/10-what-it-costs.md) → [`examples/`](examples/).
 - **Just want the honest reality:** [11 When it goes wrong](docs/11-when-it-goes-wrong.md) and [10 What it costs](docs/10-what-it-costs.md).
-- **Recently added:** [16 The chief-of-staff](docs/16-the-chief-of-staff.md) (tracking follow-through) → [17 The fleet that fixes itself](docs/17-the-fleet-that-fixes-itself.md) (self-healing) → [18 Many minds, one call](docs/18-many-minds-one-call.md) (mixture-of-agents) → [19 The family lane learns to see](docs/19-the-family-lane-learns-to-see.md) (vision).
+- **Recently added:** [18 Many minds, one call](docs/18-many-minds-one-call.md) (mixture-of-agents) → [19 The family lane learns to see](docs/19-the-family-lane-learns-to-see.md) (vision) → [20 The study companion](docs/20-the-study-companion.md) (coursework end to end) → [21 Evals as tripwires](docs/21-evals-as-tripwires.md) (guarding the fleet).
 
 ---
 
