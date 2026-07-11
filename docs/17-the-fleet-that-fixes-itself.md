@@ -1,6 +1,6 @@
 # 17 · The fleet that fixes itself (carefully)
 
-The [ops lane](09-the-ops-lane.md) is the fleet that watches the fleet. The obvious next question: when something breaks, can it **fix** itself without paging me? The answer is *yes, but only the safe, reversible things* — and, deliberately, it mostly still **proposes** rather than acts.
+The [ops lane](09-the-ops-lane.md) is the fleet that watches the fleet. The obvious next question: when something breaks, can it **fix** itself without paging me? The answer is *yes, but only the safe, reversible things*, and, deliberately, it mostly still **proposes** rather than acts.
 
 > **It runs in shadow mode.** For now it writes down exactly what it *would* do, and applies nothing, until it has earned the right to act. Earning that right is the whole design problem.
 

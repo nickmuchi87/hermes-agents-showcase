@@ -90,6 +90,7 @@ The full field guide is **22 chapters**: the [complete index is in `docs/`](docs
 | [11 · When it goes wrong](docs/11-when-it-goes-wrong.md) | A gallery of real failures and how each was caught: the most honest page here |
 | [21 · Evals as tripwires](docs/21-evals-as-tripwires.md) | The day all four bots went quietly wrong, and the regression suite that now guards the fleet |
 | [22 · The queue that learns my taste](docs/22-the-queue-that-learns-my-taste.md) | The fleet stops guessing what I want and learns it from my own plain-word verdicts |
+| [23 · The fleet by the numbers](docs/23-the-fleet-by-the-numbers.md) | A 30-day operating snapshot from the fleet's own ledgers: runs, health, incidents, cost |
 
 ### A reading path, by who you are
 
@@ -104,7 +105,7 @@ The full field guide is **22 chapters**: the [complete index is in `docs/`](docs
 - **This is a personal setup, not a product.** It's shared to *explain a way of working*, not as something to clone-and-run. Secrets, tokens, and personal data have been removed.
 - **It costs real (small) money.** The agents call commercial AI APIs. The fleet itself stays cheap by design; the full, honest breakdown (and what my larger ~$300/mo AI habit actually covers) is in [what it costs](docs/10-what-it-costs.md).
 - **The AI is a junior assistant, not an oracle.** It triages and drafts; I decide. Every design choice assumes it will sometimes be wrong.
-- **Context stays put.** Lanes don't share personas, credentials, or raw data; only tagged, derived insights cross lanes, deliberately. The exact boundary is a table in [04 · Memory](docs/04-memory.md), and the privacy trade-offs are in the [FAQ](docs/12-faq.md).
+- **Context stays put.** Lanes don't share personas, credentials, or raw data; only tagged, derived insights cross lanes, deliberately. The exact boundary is a table in [04 · Memory](docs/04-memory.md), the full data-flow picture (including what never enters the system) is [24 · What the agents can and cannot see](docs/24-data-boundaries.md), and the privacy trade-offs are in the [FAQ](docs/12-faq.md).
 
 ---
 

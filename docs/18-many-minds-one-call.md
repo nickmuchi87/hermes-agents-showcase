@@ -38,7 +38,7 @@ Same discipline as the rest of the fleet ([design principles](05-design-principl
 - **It's gated.** It only fires on verified signals, at most once a day.
 - **It's an A/B canary**, running *alongside* the proven single-model engine, not replacing it.
 - **It auto-falls-back.** If the fused output can't be parsed cleanly, the PM uses the single-model decision instead, so a confused panel never means a missed memo.
-- **It's cheap per run** — a couple of cents.
+- **It's cheap per run**, a couple of cents.
 
 ## The honest state
 

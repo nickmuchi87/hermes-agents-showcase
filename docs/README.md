@@ -29,6 +29,8 @@ This is the complete index. The [front page](../README.md) features the highligh
 | [11 · When it goes wrong](11-when-it-goes-wrong.md) | A gallery of real failures and how each was caught: the most honest page here |
 | [12 · FAQ](12-faq.md) | The questions people actually ask (privacy, cost, "why not just ChatGPT", could I build one) |
 | [13 · Glossary](13-glossary.md) | Plain-English definitions of every term, no prior knowledge assumed |
+| [23 · The fleet by the numbers](23-the-fleet-by-the-numbers.md) | A date-stamped 30-day operating snapshot from the fleet's own ledgers: runs, health, incidents, cost, and what isn't tracked yet |
+| [24 · What the agents can and cannot see](24-data-boundaries.md) | The data boundaries: what enters each lane, what never enters the system, where data lives, and what leaves the server |
 
 ## The deeper experiments
 
