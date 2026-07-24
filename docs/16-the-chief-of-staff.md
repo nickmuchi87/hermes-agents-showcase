@@ -11,7 +11,7 @@ A cheap model turns messy inputs into structured tasks (a title, a due date, whi
 | Lane | Task sources |
 |------|--------------|
 | 🎓 **MBA** | course deliverables (from the Drive coursework scan) + Wharton email ("submit the case by Thursday") |
-| 👨‍👩‍👧 **Family** | school emails + relocation to-dos |
+| 👨‍👩‍👧 **Family** | school emails + settling-in to-dos |
 
 ## The part that's actually different: looking for evidence
 
@@ -52,6 +52,16 @@ A daily **📋 TASKS** block lands in the lane's push. I can also close anything
 - **Evidence is a heuristic, not proof.** Editing the wrong file, or a confirmation that never got emailed, can fool it, so I can always correct it, and "did you finish X?" is phrased as a question, not an accusation.
 - **One engine, two lanes.** The task ledger is lane-agnostic; the MBA and family lanes plug in their own sources behind the same interface. Same code, well tested, two very different jobs.
 - **It proposes, I confirm.** Like everywhere else in the fleet, the agent surfaces; the human decides what's really done.
+
+## The keep-me-honest upgrade (July 2026)
+
+The engine recently grew a second job: tracking not just *tasks* but **obligations**, the slow-moving promises that don't live in any inbox. Money owed to us and by us, forms that have to be filed, follow-ups I said I'd make. Three pieces:
+
+- **An obligations ledger.** A small knowledge base of standing obligations with due dates, checked daily. Most entries start life extracted from email or newsletters; I can add one by just telling the bot.
+- **A "due / owed" block in the morning brief.** Quiet when nothing is close; specific when something is.
+- **A twice-daily urgent interrupt.** One check around midday and one in the evening (`cos_urgent` on the [schedule](06-the-schedule.md)) that is *only* allowed to ping if something is about to fall due. Silence is the default; urgency is the exception it has to earn.
+
+And on the evidence side, the MBA lane added a mirror-image trick: a nightly job **mines my own sent mail for promises I made** ("I'll send the deck by Friday"), and puts them in the ledger as things *I* owe. The chief of staff stopped being just a deadline tracker and became the thing that keeps me honest in both directions.
 
 This is the natural next step after the [schedule](06-the-schedule.md) and the [design principles](05-design-principles.md): not just *"here's what's coming"*, but *"here's what's slipping."*
 

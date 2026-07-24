@@ -103,7 +103,7 @@ flowchart LR
     class h,w,b,r bot;
 ```
 
-`/health` is the one I use most: it reads every lane's job ledger and prints a one-screen verdict, *"🟢 All 62 jobs green. work gateway up 6h. Last auto-fix: repaired login token 22:00."* When something's red, I can ask **"why did `em_eod_nudge` fail?"** and it reads the actual error and the recent log and explains it like a colleague would, *"context overflow, 9.5k tokens; a fallback model hit a smaller window, want me to trim the prompt? (needs your ok, it's a config change)."*
+`/health` is the one I use most: it reads every lane's job ledger and prints a one-screen verdict, *"🟢 All 72 jobs green. work gateway up 6h. Last auto-fix: repaired login token 22:00."* When something's red, I can ask **"why did `em_eod_nudge` fail?"** and it reads the actual error and the recent log and explains it like a colleague would, *"context overflow, 9.5k tokens; a fallback model hit a smaller window, want me to trim the prompt? (needs your ok, it's a config change)."*
 
 ### The boundary that makes it trustworthy
 

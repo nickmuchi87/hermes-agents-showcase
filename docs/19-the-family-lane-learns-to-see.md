@@ -37,6 +37,10 @@ flowchart TB
 - **"Looks reasonable" is a judgment, and will sometimes be wrong.** It ranks; I decide which to actually chase.
 - **The footer is the trust signal.** Telling me *what it skipped and why* ("8 over budget, 2 too small, 1 too far") is how I know it isn't quietly burying a good one. An agent that filters without showing its cuts is an agent you stop trusting.
 
+## Epilogue: it worked
+
+The hunt ended the way you'd hope: we found the house (July 2026), and the rental pipeline is now **paused, not deleted**. That's a design point worth stating: an agent built for a finite mission should be easy to retire without ceremony, and easy to revive if the mission comes back. The lane's centre of gravity has since shifted to school life and settling in, where the same patterns (cheap filters first, a relevance gate that fails open, always show the cuts) now sort school newsletters and community events instead of floor plans.
+
 This is the same philosophy as [memory](04-memory.md) and the [design principles](05-design-principles.md), pointed at pixels instead of prose: do the cheap thing first, spend the smart model only where judgment is actually needed, and always show your work.
 
 ---

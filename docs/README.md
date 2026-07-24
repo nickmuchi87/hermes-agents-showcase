@@ -16,7 +16,7 @@ This is the complete index. The [front page](../README.md) features the highligh
 
 | Chapter | What it shows |
 |---------|---------------|
-| [06 · The schedule](06-the-schedule.md) | Every scheduled job (all ~60), how they connect, and how Telegram delivery works |
+| [06 · The schedule](06-the-schedule.md) | Every scheduled job (all ~70), how they connect, and how Telegram delivery works |
 | [07 · How I built this](07-how-i-built-this.md) | The honest build story, stack, what took the time, and advice if you want to try |
 | [08 · The fleet map](08-the-fleet-map.md) | The whole system at a glance, then each lane up close, every connection, and which ones ping Telegram |
 | [09 · The ops lane](09-the-ops-lane.md) | The fleet that watches the fleet: a command-centre readiness board, an hourly self-healing watchdog, and an "on-call SRE" ops bot |
@@ -41,7 +41,7 @@ This is the complete index. The [front page](../README.md) features the highligh
 | [16 · The chief-of-staff](16-the-chief-of-staff.md) | The layer that tracks follow-through, not just deadlines, and checks for *evidence* a task got done |
 | [17 · The fleet that fixes itself](17-the-fleet-that-fixes-itself.md) | A self-healing watchdog and a shadow-mode remediation agent that proposes safe fixes and escalates the rest |
 | [18 · Many minds, one call](18-many-minds-one-call.md) | A mixture-of-agents experiment where several models vote on one AI-PM decision, with automatic fallback to the trusted single model |
-| [19 · The family lane learns to see](19-the-family-lane-learns-to-see.md) | A vision model that judges house-listing *photos* to filter and rank our relocation rental search |
+| [19 · The family lane learns to see](19-the-family-lane-learns-to-see.md) | A vision model that judged house-listing *photos* to filter and rank our rental search (it worked, we found the house) |
 | [20 · The study companion](20-the-study-companion.md) | A model panel writes citation-checked weekly course notes, notices when a course ends, writes its capstone, and keeps the calendar true |
 | [21 · Evals as tripwires](21-evals-as-tripwires.md) | The day all four bots went quietly wrong, and the labeled regression suite that now guards the fleet |
 | [22 · The queue that learns my taste](22-the-queue-that-learns-my-taste.md) | A shared podcast listen-queue I rate in plain words, so the fleet stops guessing what I want and learns it from my own verdicts |

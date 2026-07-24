@@ -1,6 +1,6 @@
 # 6 · The schedule: every job, and how they connect
 
-This is the part people find most surprising: there's no "AI deciding what to do next." The fleet runs on a **boring, deterministic schedule**: about **60 jobs a day** across four lanes (three content lanes, plus an ops lane that watches the other three). Each job has a fixed time, a fixed task, and a fixed delivery target. The intelligence is *inside* each job; the orchestration is just a clock.
+This is the part people find most surprising: there's no "AI deciding what to do next." The fleet runs on a **boring, deterministic schedule**: about **70 jobs a day** across four lanes (three content lanes, plus an ops lane that watches the other three). Each job has a fixed time, a fixed task, and a fixed delivery target. The intelligence is *inside* each job; the orchestration is just a clock.
 
 Two kinds of job (recap from [architecture](02-architecture.md)):
 - 🧠 **agent** job, invokes the AI to read + judge + write.
@@ -15,25 +15,27 @@ And three **delivery targets**:
 
 ---
 
-## 💼 WORK lane (`em`), 21 jobs
+## 💼 WORK lane (`em`), 23 jobs
 
 The busiest lane. Notice the **pattern**: cheap no-agent "watcher" scripts run *first* and write data locally; then the AI morning brief runs and reads everything they gathered.
 
 | Time (UTC) | Job | Type | Delivers | What it does |
 |-----------|-----|------|----------|--------------|
-| 20:20 | `imf_watch` | ⚙️ | local | IMF program news → file |
+| 20:25 | `competitor_watch` | ⚙️ | local | What peer fund managers published overnight → file |
+| 20:28 | `index_event_monitor` | ⚙️ | local | News on a major bond-index inclusion event (timeline, constituents, flows) → file |
 | 20:30 | `policy_commentary` | ⚙️ | local | Think-tank / policy RSS → file |
 | 20:30 | `arxiv_research` | ⚙️ | local | Scans new research papers (arXiv/OpenAlex) → file |
-| 20:30 (Sun/Wed) | `podcast_weekly_synthesis` | 🧠 | 📱 | Cross-episode podcast synthesis → a 2-min read |
 | 20:40 | `press_scan_am` | ⚙️ | local | Morning financial-press scan → file |
 | 20:45 | `em_email_digest` | 🧠 | 📱 | Triages the work inbox → digest |
 | 20:50 | `rating_watcher` | ⚙️ | local | Rating-agency actions → file |
+| 20:55 | `x_brief_am` | ⚙️ | local | Regional market scan of X/Twitter via a search-capable model → file |
 | 20:55 | `em_digest_publish` | ⚙️ | local | Assembles the day's digest → feed |
 | 21:00 | `kanban_digest` | ⚙️ | 📱 | Digest of my task-board state |
 | **21:15** | **`em_morning_brief`** | 🧠 | 📱 | **Reads ALL the watchers + memory, writes the brief** |
 | 21:30 | `em_brief_archive` | ⚙️ | local | Saves the brief to memory (for tomorrow's diff) |
 | 21:45 | `vault_daily_snapshot` | ⚙️ | local | Snapshots the day's data vault |
 | 21:50 | `agentmemory_ingest` | ⚙️ | local | Ingests the day's outputs into the memory service |
+| 12:00 (Sun/Wed) | `podcast_weekly_synthesis` | 🧠 | 📱 | Cross-episode podcast synthesis → a 2-min read |
 | 08:00 | `podcast_queue_sync` | ⚙️ | 📱 | Syncs the shared podcast listen-queue + my ratings |
 | 10:10 | `press_scan_pm` | ⚙️ | local | Evening financial-press scan → file |
 | 10:45 | `em_eod_nudge` | 🧠 | 📱 | End-of-day wrap: what moved, what needs me tomorrow |
@@ -43,11 +45,11 @@ The busiest lane. Notice the **pattern**: cheap no-agent "watcher" scripts run *
 | 03:55 | `em_lane_audit` | ⚙️ | local | Self-check: did everything run? |
 | 04:30 | `skills_drift_audit` | ⚙️ | 📱 | Flags if any agent skill has gone stale |
 
-**The connection:** a stack of cheap watchers (20:20→21:00) feed the **21:15 morning brief**, which is archived (21:30) so that *tomorrow's* brief can open with "here's what changed since yesterday." That archive is also what the diff logic and on-demand corpus queries read. One AI call a morning; everything around it is free plumbing.
+**The connection:** a stack of cheap watchers (20:25→21:00) feed the **21:15 morning brief**, which is archived (21:30) so that *tomorrow's* brief can open with "here's what changed since yesterday." That archive is also what the diff logic and on-demand corpus queries read. One AI call a morning; everything around it is free plumbing.
 
 ```mermaid
 flowchart LR
-    w1[imf_watch] & w2[rating_watcher] & w3[policy_commentary] & w4[press_scan_am] & w5[em_email_digest] & w6[arxiv_research] --> brief[🧠 21:15 MORNING BRIEF]
+    w1[x_brief_am] & w2[rating_watcher] & w3[policy_commentary] & w4[press_scan_am] & w5[em_email_digest] & w6[arxiv_research] & w7[competitor_watch] & w8[index_event_monitor] --> brief[🧠 21:15 MORNING BRIEF]
     mem[(🧠 yesterday's<br/>brief in memory)] --> brief
     brief --> phone[📱 sent to me]
     brief --> arch[21:30 archive → memory]
@@ -56,17 +58,21 @@ flowchart LR
 
 ---
 
-## 🎓 MBA lane (`wemba`), 19 jobs
+## 🎓 MBA lane (`wemba`), 23 jobs
 
 Mostly quiet plumbing into memory, with a cluster of AI jobs that turn coursework into study help, plus a set of guardrail checks (evals, ledger invariants, Canvas reconciliation) that keep the data honest.
 
 | Time (UTC) | Job | Type | Delivers | What it does |
 |-----------|-----|------|----------|--------------|
+| every 15 min | `canvas_catchup` | ⚙️ | 📱 | Quick poll between full reconciles, so a fresh submission is ticked off in minutes |
 | every 30 min | `drive_watch` | ⚙️ | origin | Watches Google Drive for new coursework |
 | every 30 min | `preclass_brief` | ⚙️ | origin | If a class is imminent, preps a brief |
+| hourly | `canvas_health` | ⚙️ | 📱 | Watches the Canvas pipeline itself; alerts if polling breaks |
+| every 3h | `canvas_truth` | ⚙️ | 📱 | Reconciles course data against Canvas (the source of truth) |
+| every 3h | `email_close` | ⚙️ | 📱 | Closes ledger items when email shows they got done |
 | every 6h | `canvas_heartbeat` | ⚙️ | local | Checks the Canvas session/data is still fresh |
 | 20:30 | `daily_wemba_brief` | 🧠 | 📱 | Daily study brief: deadlines, new materials, Wharton email |
-| 20:40 | `canvas_truth` | ⚙️ | 📱 | Reconciles course data against Canvas (the source of truth) |
+| 20:30 | `commitments` | ⚙️ | local | Mines my sent mail for promises I made → the brief's "you owe" block |
 | 21:00 | `chief_of_staff` | 🧠 | origin | Tracks deadlines *and* follow-through (morning pass) |
 | 21:00 | `assignment_reconcile` | ⚙️ | 📱 | Reconciles assignments vs. evidence they got done |
 | 21:00 | `calendar_sync` | ⚙️ | origin | Keeps the class calendar in sync |
@@ -82,6 +88,8 @@ Mostly quiet plumbing into memory, with a cluster of AI jobs that turn coursewor
 | **23:30 (Sun)** | **`podcast_course_bridge`** | ⚙️ | 📱 | **Links the week's coursework to recent podcast themes** |
 | 03:55 | `wemba_lane_audit` | ⚙️ | local | Self-check |
 
+**The completion loop got faster (July 2026):** Canvas used to be reconciled once a day, so an assignment submitted in the morning could sit "open" until the next day's poll and earn a needless nag. Now `canvas_truth` runs every 3 hours, `canvas_catchup` sweeps every 15 minutes for fresh submissions, `email_close` closes items the moment email shows they got done, and `canvas_health` watches the pipeline itself. Same ledger, four small guards, and the "did you finish X?" question is now asked only when the answer might genuinely be no.
+
 **The cross-lane connection (the elegant bit):** the Sunday `weekly_synthesis` (22:00) writes the week's course themes to memory. Ninety minutes later, `podcast_course_bridge` (23:30) reads *both* those course themes **and** the work lane's podcast insights, finds overlaps (e.g. a startup podcast that maps to my entrepreneurship paper), and messages me. **Two lanes collaborating through shared memory**: see [memory](04-memory.md).
 
 ```mermaid
@@ -93,44 +101,59 @@ flowchart LR
 
 ---
 
-## 👨‍👩‍👧 FAMILY lane (`family`), 10 jobs
+## 👨‍👩‍👧 FAMILY lane (`family`), 11 jobs
 
-The most time-sensitive lane (school deadlines, an international move), so it polls more frequently during waking hours.
+The most time-sensitive lane. The international move has *happened* (we're settled in the new country), so the lane's centre of gravity has shifted from "find a house, book the flights" to school life and settling in, and it still polls frequently during waking hours.
 
 | Time (UTC) | Job | Type | Delivers | What it does |
 |-----------|-----|------|----------|--------------|
 | :00,:30 (waking hrs) | `family_imminent` | ⚙️ | 📱 | Imminent family-calendar events → pings |
-| :15 (waking hrs) | `relocation_emails` | ⚙️ | 📱 | Relocation-related email → pings |
+| :15 (waking hrs) | `relocation_emails` | ⚙️ | 📱 | Move / settling-in email (lease, utilities, school admin) → pings |
 | 20:00 | `chief_of_staff` | 🧠 | local | Pulls tasks + checks follow-through (before the brief) |
 | 20:30 | `daily_family_brief` | 🧠 | 📱 | Morning family brief: today's events + actions |
 | 20:45 | `family_brief_archive` | ⚙️ | local | Saves the brief to memory |
 | 21:00 | `family_advisor` | 🧠 | 📱 | Proactive advisor pass: guidance + flags across the household |
-| 21:15 | `rental_email_alerts` | ⚙️ | 📱 | New rental listings/alerts in the destination city |
+| 21:00 | `notion_sync` | ⚙️ | local | Mirrors the settling-in task board to a shared workspace page |
+| 02:00, 08:00 | `cos_urgent` | ⚙️ | 📱 | Midday + evening obligations check; pings only if something is about to fall due |
 | 20:30 (Sun) | `family_insights_digest` | ⚙️ | 📱 | Weekly digest of what the lane has learned |
-| 21:30 (Sun) | `relocation_sweep` | ⚙️ | 📱 | Weekly relocation-checklist sweep |
+| 21:30 (Sun) | `relocation_sweep` | ⚙️ | 📱 | Weekly settling-in checklist sweep |
 | 03:55 | `family_lane_audit` | ⚙️ | local | Self-check |
 
-**The connection:** the daily brief (20:30) gives the calm overview, preceded by a chief-of-staff pass (20:00) that reconciles the task ledger first; the frequent pollers (`family_imminent`, `relocation_emails`) handle anything urgent *between* briefs, and `family_advisor` adds a proactive nudge. The closer we get to move-day, the louder the relocation jobs are allowed to be.
+**Also on the clock, outside the main scheduler:** a set of school helpers run as plain system timers rather than lane cron jobs, same fleet, different clock:
+
+| When (UTC) | Helper | What it does |
+|-----------|--------|--------------|
+| daily 21:00 | `school_calendar_watch` | Watches the school's public calendar; enriches vague entries from the newsletter archive |
+| daily 22:45 | `newsletter_engine` | Reads new school newsletters → tasks for the chief of staff + a searchable archive |
+| Sun 08:00 | `week_ahead` | One unified "family week ahead" digest, school + calendar + obligations |
+| Thu 07:00 | `local_events` | Community/council events digest, filtered to the kids' ages |
+| every 30 min | `school_email_alerter` | School email → the family chat, fast |
+| each morning | `school_portal_check` | Runs on a home machine (the portal needs a real browser); posts the day's school notices |
+
+**The connection:** the daily brief (20:30) gives the calm overview, preceded by a chief-of-staff pass (20:00) that reconciles the task ledger first; the frequent pollers (`family_imminent`, `relocation_emails`, `school_email_alerter`) handle anything urgent *between* briefs; `family_advisor` adds a proactive nudge; and `cos_urgent` is the only job allowed to interrupt mid-day, strictly for obligations about to fall due. The rental-hunt jobs that ran before the move are paused, not deleted: the house hunt succeeded, so that machinery earned its retirement.
 
 ---
 
-## 🛟 OPS lane (`ops`), 12 jobs
+## 🛟 OPS lane (`ops`), 15 jobs
 
 The fourth, supervisory lane. It produces no "content"; it watches the other three and keeps the fleet honest. It gets its own chapter, [09 · The ops lane](09-the-ops-lane.md), but here it is on the same clock:
 
 | Time (UTC) | Job | Type | Delivers | What it does |
 |-----------|-----|------|----------|--------------|
 | hourly | `self_heal_watchdog` | ⚙️ | 📱 | Fixes safe/reversible failures on its own, escalates the rest |
+| hourly | `runledger_sweep` | ⚙️ | local | Sweeps every job's run record into one ledger (the fleet's flight recorder) |
 | every 30 min | `remediation_triage` | ⚙️ | local | Triages any errored jobs across all lanes |
 | every 6h | `observer_digest` | ⚙️ | 📱 | Rolling digest of fleet activity |
 | 08:00, 20:00 | `fleet_health` | ⚙️ | 📱 | The twice-daily readiness board (SITREP) |
 | 19:45 | `remediation_brain_shadow` | 🧠 | local | Shadow-mode "brain": drafts fixes, changes nothing |
 | 20:05 | `remediation_propose` | ⚙️ | 📱 | Surfaces the drafted fixes for my approval |
 | 20:15 | `cost_tracker` | ⚙️ | 📱 | Tracks daily model/API spend |
+| 20:20 | `contract_checks` | ⚙️ | 📱 | Checks cross-job contracts: feeds fresh, formats intact, invariants hold |
 | 20:35 | `morning_ops_digest` | ⚙️ | 📱 | Overnight fleet status, before the content briefs |
 | 14:45 | `starmap_bridge` | ⚙️ | local | Bridges the fleet skill-graph into memory |
 | 20:45 (Sun) | `agentmemory_insights_digest` | ⚙️ | 📱 | Weekly digest of memory-service insights |
 | 14:00 (Sun) | `bak_rotation` | ⚙️ | 📱 | Rotates backups |
+| 20:40 (Sun) | `weekly_feedback_review` | ⚙️ | 📱 | Reviews the week's 👍/👎 reply verdicts on fleet output and proposes tweaks |
 | 20:00 (Mon) | `model_price_watch` | ⚙️ | 📱 | Weekly watch on model prices/availability |
 
 **The connection:** `remediation_brain_shadow` (19:45) drafts proposed fixes, `remediation_propose` (20:05) surfaces them for a yes/no, and `morning_ops_digest` (20:35) lands the overnight verdict *before* the content briefs fire, so if the fleet broke overnight, I know before I read anything it produced.
@@ -173,7 +196,7 @@ flowchart LR
     sun --> dawn
 ```
 
-Roughly: **morning = brief me**, **daytime = catch anything urgent**, **evening = wrap up**, **night = the fleet checks its own health**, **Sunday = the deeper weekly thinking**. Same loop every day, ~60 jobs, one small server, a few dollars a month.
+Roughly: **morning = brief me**, **daytime = catch anything urgent**, **evening = wrap up**, **night = the fleet checks its own health**, **Sunday = the deeper weekly thinking**. Same loop every day, ~70 jobs, one small server, a few dollars a month.
 
 ---
 

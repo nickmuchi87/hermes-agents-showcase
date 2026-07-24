@@ -6,7 +6,7 @@ from the main README / docs.
 Suggested shots:
 - `work-brief.png`, a real morning brief from the work bot
 - `mba-preclass.png`, a pre-class brief from the MBA bot
-- `family-nudge.png`, a school/relocation nudge from the family bot
+- `family-nudge.png`, a school/settling-in nudge from the family bot
 - `podcast-q.png`, a `/podcast_q` query + result
 
 **Before committing any screenshot, redact:** real position sizes, account

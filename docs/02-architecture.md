@@ -17,12 +17,12 @@ flowchart TB
 
     subgraph server["🖥️ ONE SMALL CLOUD SERVER"]
         direction TB
-        sched[⏰ Scheduler<br/>~60 jobs/day]
+        sched[⏰ Scheduler<br/>~70 jobs/day]
 
         subgraph lanes["THREE CONTENT LANES (+ ops)"]
-            em[💼 WORK lane<br/>21 scheduled jobs]
-            wemba[🎓 MBA lane<br/>19 scheduled jobs]
-            fam[👨‍👩‍👧 FAMILY lane<br/>10 scheduled jobs]
+            em[💼 WORK lane<br/>23 scheduled jobs]
+            wemba[🎓 MBA lane<br/>23 scheduled jobs]
+            fam[👨‍👩‍👧 FAMILY lane<br/>11 scheduled jobs]
         end
 
         mem[(🧠 Shared memory<br/>service)]
@@ -137,6 +137,27 @@ Two things this unlocks:
 | **Embeddings** (podcast clustering) | **Gemini embeddings** (direct) | Cheap vector maths, not text generation |
 
 > **A note on consolidation:** these things *can* run on any cheap model, and I've moved them around. The nightly noise-audit cron originally used Gemini Flash-Lite; I later pointed it at DeepSeek-flash (via OpenRouter) to keep the whole text-generation side on **one provider and one key**: simpler to reason about and bill. Gemini still earns its place for **embeddings** (vector maths, not text, a different job) and conversation **compression**. The lesson isn't "Gemini vs DeepSeek"; it's that *because* model choice is just a config string ([OpenRouter](#one-gateway-many-models-openrouter)), consolidating or swapping the cheap-utility tier is a one-line change, not a rewrite.
+
+### Why a different model for X/Twitter
+
+The work lane's morning brief leads with **what credible people are saying on X right now**: central-bank surprises, rating actions, analyst takes on specific markets. No general model can do that: it needs *live* access to X.
+
+The answer is **Grok** (xAI's model), which has a native `x_search` tool: it can actually query X and read recent posts. So this one job routes to Grok instead of the usual models. Two design touches make it useful rather than noisy:
+
+```mermaid
+flowchart LR
+    cron[⏰ pre-brief scan<br/>20:55 UTC] --> grok[🔍 Grok + x_search]
+    prior[📋 prompt discipline:<br/>lead institutional and named-firm<br/>sources, tag the rest] --> grok
+    grok --> tier{tier by source quality}
+    tier --> a[institutional / named-firm<br/>→ lead]
+    tier --> b[retail / anonymous<br/>→ tag unverified, keep]
+    a & b --> brief[🗃️ snapshot file →<br/>feeds the morning brief]
+```
+
+1. **Two searches, merged.** One sweep for major political/market *events* (which often break on non-finance accounts first) and one for specialist *markets* chatter, so a big story is never missed just because only retail accounts carried it.
+2. **Tiered surfacing, not filtering.** Posts from institutional or named-firm sources lead; anonymous hot-takes are tagged `[unverified]` and demoted, never silently dropped.
+
+And one hard-won guardrail: the prompt ends with *"if NOTHING qualifies, output exactly NO_MATERIAL, no prose."* Without a forced sentinel like that, a model on a quiet day will invent filler rather than admit there's nothing to say (a failure mode that shows up in the [failure gallery](11-when-it-goes-wrong.md)).
 
 ---
 **Next:** [03 · A worked example: the podcast digest →](03-the-digest-pipeline.md)

@@ -9,7 +9,7 @@ flowchart TB
     subgraph write["✍️ Agents WRITE memories"]
         w1[Work: 'Morning brief 2026-06-01:<br/>Nigeria OW under pressure...']
         w2[Podcast: 'Expert views this week:<br/>Gita Gopinath argues...']
-        w3[Family: 'Relocation T-14;<br/>enrolment forms due Fri']
+        w3[Family: 'School permission<br/>slip due Fri']
     end
 
     mem[(🧠 Memory service<br/>tagged, versioned,<br/>searchable)]

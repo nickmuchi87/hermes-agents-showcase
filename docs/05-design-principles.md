@@ -63,7 +63,7 @@ The agent never executes irreversible actions on my behalf. It prepares; I decid
 
 ## 7. Make it observable
 
-With ~60 jobs a day across four lanes, things *will* break silently. A daily "health audit" checks every lane (are the bots alive? did the crons run? are the data feeds fresh? are the API keys valid?) and reports a readiness summary. You can't fix what you can't see.
+With ~70 jobs a day across four lanes, things *will* break silently. A daily "health audit" checks every lane (are the bots alive? did the crons run? are the data feeds fresh? are the API keys valid?) and reports a readiness summary. You can't fix what you can't see.
 
 ---
 

@@ -4,9 +4,9 @@
 
 > How one person uses a small fleet of always-on AI agents to handle **work**, an **MBA**, and **family logistics**: explained for people who have never touched an "agent" before.
 
-I'm an emerging-markets fixed-income portfolio manager, a part-time Wharton EMBA student, and a dad relocating a family across the world. Three different lives, three different streams of email/calendars/documents/news, and not enough hours.
+I'm a fixed-income portfolio manager, a part-time Wharton EMBA student, and a dad who just relocated a family across the world. Three different lives, three different streams of email/calendars/documents/news, and not enough hours.
 
-So I built the fleet: **three user-facing agents run my work, school, and family workflows. A fourth, supervisory agent watches the fleet itself**, fixing the safe stuff on its own and asking me about the rest. Together they run about 60 scheduled jobs a day, but stay silent unless something actually needs me.
+So I built the fleet: **three user-facing agents run my work, school, and family workflows. A fourth, supervisory agent watches the fleet itself**, fixing the safe stuff on its own and asking me about the rest. Together they run about 70 scheduled jobs a day, but stay silent unless something actually needs me.
 
 This is not a product or a clone-and-run template. It is a **field guide** to what worked, what failed, what it costs, and the guardrails that make always-on agents tolerable in real life. It is deliberately written for a **non-technical reader**. If you've heard "AI agents" and thought *"...okay but what does that actually mean in practice?"*, this is for you.
 
@@ -14,7 +14,7 @@ This is not a product or a clone-and-run template. It is a **field guide** to wh
 
 ## The one-paragraph version
 
-Each agent ("lane") is a long-running program that wakes up on a schedule, gathers information from my email/calendar/documents/news feeds, runs it through a large language model (the same kind of AI behind ChatGPT/Claude) with a **specific job description and memory**, and then sends me a short, human Telegram message, only when something's worth my attention. The fleet does this on its own, ~60 scheduled jobs a day, across three separate content "lanes" so my work brain, school brain, and family brain never bleed into each other, while the fourth lane watches the other three.
+Each agent ("lane") is a long-running program that wakes up on a schedule, gathers information from my email/calendar/documents/news feeds, runs it through a large language model (the same kind of AI behind ChatGPT/Claude) with a **specific job description and memory**, and then sends me a short, human Telegram message, only when something's worth my attention. The fleet does this on its own, ~70 scheduled jobs a day, across three separate content "lanes" so my work brain, school brain, and family brain never bleed into each other, while the fourth lane watches the other three.
 
 ```
    📨 emails        📅 calendars       📰 news/RSS        📑 documents
@@ -25,7 +25,7 @@ Each agent ("lane") is a long-running program that wakes up on a schedule, gathe
    │                  THREE AI AGENT "LANES"                       │
    │                                                               │
    │   💼 WORK (em)        🎓 MBA (wemba)        👨‍👩‍👧 FAMILY        │
-   │   markets, credit,    course prep,          school, relocation,│
+   │   markets, credit,    course prep,          school, settling in│
    │   IMF, ratings        deliverables          calendar           │
    └─────────────────────────────────────────────────────────────┘
               ▲                   │
@@ -44,7 +44,7 @@ Because **context is everything**, and mixing it makes the AI worse at all three
 
 - My **work** agent knows it's a sovereign-credit PM. It cares about Egypt's IMF program and Brazilian rates. It should *never* surface my daughter's school newsletter.
 - My **MBA** agent knows my Wharton courses and deliverables. It links a podcast on startup unit-economics to my entrepreneurship class.
-- My **family** agent knows we're relocating, knows the kids' schools, and counts down to move-day. It should never page me about bond spreads.
+- My **family** agent knows we just moved countries, knows the kids' schools, and tracks the settling-in list. It should never page me about bond spreads.
 - And the **ops** agent knows nothing about any of that: its whole world is "did every job run, is every feed fresh, what needs fixing."
 
 Same underlying AI, four different **"job descriptions" + memories + data sources**. That separation is the whole trick.
@@ -53,7 +53,7 @@ Same underlying AI, four different **"job descriptions" + memories + data source
 |------|------|---------|----------------|
 | 💼 **Work** (`em`) | EM sovereign-credit chief-of-staff | Financial press, IMF, rating agencies, EM podcasts, research | "Morning brief: Nigeria OW under pressure, Brent <$90; S&P upgraded SA outlook." |
 | 🎓 **MBA** (`wemba`) | EMBA study partner | Google Drive coursework, Wharton email, class calendar, Canvas | "Pre-class brief: OIDD 6360 case due Thu; a podcast this week maps to your scaling-ops paper." |
-| 👨‍👩‍👧 **Family** (`family`) | Household logistics assistant | School emails, relocation tasks, family calendar | "T-14 to the move. Patricia (school) sent enrolment forms, due Friday." |
+| 👨‍👩‍👧 **Family** (`family`) | Household logistics assistant | School emails + newsletters, settling-in tasks, family calendar | "School newsletter: swimming carnival Friday, permission slip due Wednesday. Added to your list." |
 | 🛟 **Ops** (`ops`) | On-call SRE for the fleet | The other three lanes' jobs, feeds, and services | "Repaired a torn login token at 22:00; everything else green." |
 
 Everything reaches me the same way: **separate Telegram bots**, one per lane, and only when something's worth my attention.
@@ -69,7 +69,7 @@ Everything reaches me the same way: **separate Telegram bots**, one per lane, an
 ![WEMBA daily brief: pending deadlines, new Drive files, and worth-noting items](images/screenshots/mba-preclass.png)
 
 <!-- Work-bot + family-bot shots to add next: images/screenshots/work-brief.png, images/screenshots/family-nudge.png
-| Work bot, morning brief | MBA bot, brief | Family bot, relocation nudge |
+| Work bot, morning brief | MBA bot, brief | Family bot, school nudge |
 |---|---|---|
 | ![](images/screenshots/work-brief.png) | ![](images/screenshots/mba-preclass.png) | ![](images/screenshots/family-nudge.png) |
 -->

@@ -1,6 +1,8 @@
 # 23 · The fleet by the numbers: a 30-day operating snapshot
 
-Every claim in this repo ("~60 jobs", "mostly silent", "tens of dollars") is easy to write and hard to trust. So this page is the fleet's own ledgers, read out loud: a **date-stamped snapshot** of the 30 days ending **2026-07-12**, computed from the scheduler's job files, the ops lane's cost tracker, and its escalation log.
+Every claim in this repo ("mostly silent", "tens of dollars") is easy to write and hard to trust. So this page is the fleet's own ledgers, read out loud: a **date-stamped snapshot** of the 30 days ending **2026-07-12**, computed from the scheduler's job files, the ops lane's cost tracker, and its escalation log.
+
+> **Note (July 2026):** the fleet has since grown from the 62 jobs counted below to ~72 (plus a handful of school helpers on system timers); the [schedule](06-the-schedule.md) is the live picture. The numbers on this page are left as they were measured, that's the point of a date-stamped snapshot.
 
 Two honesty rules up front:
 
