@@ -133,6 +133,7 @@ Two things this unlocks:
 | Per-episode podcast summaries | **Fast cheap** (DeepSeek-flash), via OpenRouter | High volume, doesn't need a flagship |
 | **Noise classification** (nightly lane audits) | **Fast cheap** (DeepSeek-flash), via OpenRouter | Thousands of tiny "signal or noise?" calls, cheap, and one fewer provider to manage |
 | Free tier (on my laptop) | **Local subscription CLI** | $0 incremental, tried *first* where available |
+| **On-demand hard questions** (a `deep:` message prefix) | **Frontier reasoning model**, flat-rate subscription via its CLI | Human-triggered escalation, one question at a time, zero marginal cost ([ch. 18](18-many-minds-one-call.md)) |
 | **Context compression** | **Gemini Flash-Lite** (direct) | Squashing long histories cheaply |
 | **Embeddings** (podcast clustering) | **Gemini embeddings** (direct) | Cheap vector maths, not text generation |
 

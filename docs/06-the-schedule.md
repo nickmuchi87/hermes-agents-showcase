@@ -180,7 +180,7 @@ flowchart TB
 
 Two things make this pleasant rather than spammy:
 1. **Separate threads** keep work/school/family mentally separate, I can mute one without losing the others.
-2. **It's a two-way channel.** I reply `done: <thing>` and the relevant agent marks it complete in memory; I correct it and that's remembered. The bots aren't just broadcasting, they're a conversation. And I can *ask* on demand: a corpus query returns instantly, no scheduled job needed.
+2. **It's a two-way channel.** I reply `done: <thing>` and the relevant agent marks it complete in memory; I correct it and that's remembered. The bots aren't just broadcasting, they're a conversation. And I can *ask* on demand: a corpus query returns instantly, no scheduled job needed. For the genuinely hard questions there's an escalation prefix, `deep:`, that has the bot gather the facts cheaply and then hand them to a frontier reasoning model ([many minds, one call](18-many-minds-one-call.md)).
 
 ---
 

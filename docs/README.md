@@ -40,7 +40,7 @@ This is the complete index. The [front page](../README.md) features the highligh
 | [15 · Cross-episode synthesis](15-cross-episode-synthesis.md) | How per-episode summaries become a cross-episode synthesis (themes, expert voices, challenges to my positions) that also feeds coursework and notes |
 | [16 · The chief-of-staff](16-the-chief-of-staff.md) | The layer that tracks follow-through, not just deadlines, and checks for *evidence* a task got done |
 | [17 · The fleet that fixes itself](17-the-fleet-that-fixes-itself.md) | A self-healing watchdog and a shadow-mode remediation agent that proposes safe fixes and escalates the rest |
-| [18 · Many minds, one call](18-many-minds-one-call.md) | A mixture-of-agents experiment where several models vote on one AI-PM decision, with automatic fallback to the trusted single model |
+| [18 · Many minds, one call](18-many-minds-one-call.md) | Heavier thinking, two ways: a model council that votes on scheduled decisions (with automatic fallback), and a `deep:` prefix that escalates one question to a frontier reasoning model on demand |
 | [19 · The family lane learns to see](19-the-family-lane-learns-to-see.md) | A vision model that judged house-listing *photos* to filter and rank our rental search (it worked, we found the house) |
 | [20 · The study companion](20-the-study-companion.md) | A model panel writes citation-checked weekly course notes, notices when a course ends, writes its capstone, and keeps the calendar true |
 | [21 · Evals as tripwires](21-evals-as-tripwires.md) | The day all four bots went quietly wrong, and the labeled regression suite that now guards the fleet |
